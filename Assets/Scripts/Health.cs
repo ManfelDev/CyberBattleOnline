@@ -25,7 +25,14 @@ public class Health : MonoBehaviour
 
     private void Die()
     {
-        this.gameObject.SetActive(false);
+        if (GetComponent<Player>() != null)
+        {
+            this.gameObject.SetActive(false);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     public void Respawn()
