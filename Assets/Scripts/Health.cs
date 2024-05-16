@@ -13,18 +13,24 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, GameObject shooter)
     {
         currentHealth -= damage;
 
         if (isDead)
         {
-            Die();
+            Die(shooter);
         }
     }
 
-    private void Die()
+    private void Die(GameObject shooter)
     {
+        Player player = shooter.GetComponent<Player>();
+        if (player != null)
+        {
+            player.AddScore(10);
+        }
+
         if (GetComponent<Player>() != null)
         {
             this.gameObject.SetActive(false);

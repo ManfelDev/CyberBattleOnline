@@ -26,7 +26,7 @@ public class Projectile : MonoBehaviour
             var health = collision.GetComponent<Health>();
             if (health != null && !health.isDead)
             {
-                health.TakeDamage(damage);
+                health.TakeDamage(damage, shooter);
                 Destroy(gameObject);
             }
         }

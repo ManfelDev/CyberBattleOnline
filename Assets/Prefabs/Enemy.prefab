@@ -211,7 +211,7 @@ MonoBehaviour:
   shotCooldown: 0.5
   bulletPrefab: {fileID: 409981435992928682, guid: 2970e9e0a9fe8e84dae7ee87087dac9f, type: 3}
   bulletSpawnPoint: {fileID: 2517958709311842990}
-  shootingRange: 360
+  shootingRange: 600
   stopDistance: 200
   retreatDistance: 150
   rotationSpeed: 0.2

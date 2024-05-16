@@ -19,7 +19,7 @@ public class Character : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        health.TakeDamage(damage);
+        health.TakeDamage(damage, this.gameObject);
     }
 
     protected void Shoot()
