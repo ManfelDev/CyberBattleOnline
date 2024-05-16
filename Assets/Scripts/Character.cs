@@ -3,10 +3,14 @@ using UnityEngine;
 [RequireComponent(typeof(Health))]
 public class Character : MonoBehaviour
 {
-    [SerializeField] protected float speed = 100;
+    [SerializeField] protected float speed = 200;
+    [SerializeField] protected float shotCooldown = 0.5f;
+    [SerializeField] protected GameObject bulletPrefab;
+    [SerializeField] protected Transform  bulletSpawnPoint;
 
-    protected Health health;
+    protected Health      health;
     protected Rigidbody2D rb;
+    private float         lastShotTime;
 
     protected virtual void Start()
     {
@@ -16,5 +20,17 @@ public class Character : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health.TakeDamage(damage);
+    }
+
+    protected void Shoot()
+    {
+        if (Time.time - lastShotTime < shotCooldown)
+        {
+            return;
+        }
+
+        lastShotTime = Time.time;
+
+        Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
     }
 }

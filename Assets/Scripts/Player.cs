@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class Player : Character
 {
-    [SerializeField] GameObject bulletPrefab;
-    [SerializeField] Transform  bulletSpawnPoint;
-
     private int score;
 
     protected override void Start()
@@ -25,24 +22,19 @@ public class Player : Character
 
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
 
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButton("Fire1") )
         {
             Shoot();
         }
     }
 
-    private void Shoot()
+    public void AddScore(int amount)
     {
-        Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        score += amount;
     }
 
     public void Respawn()
     {
         health.Respawn();
-    }
-
-    public void AddScore(int amount)
-    {
-        score += amount;
     }
 }
