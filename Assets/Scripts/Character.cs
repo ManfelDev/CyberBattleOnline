@@ -31,6 +31,8 @@ public class Character : MonoBehaviour
 
         lastShotTime = Time.time;
 
-        Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        GameObject projectile = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        Projectile projectileScript = projectile.GetComponent<Projectile>();
+        projectileScript.SetShooter(gameObject);
     }
 }

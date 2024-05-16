@@ -410,21 +410,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1477919827977577667, guid: 0b98a683ae35a2f418504929971beb96, type: 3}
-      propertyPath: rotationSpeed
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 4361237396830704837, guid: 0b98a683ae35a2f418504929971beb96, type: 3}
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 4361237396830704837, guid: 0b98a683ae35a2f418504929971beb96, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5860038026190447696, guid: 0b98a683ae35a2f418504929971beb96, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -131.8
+      value: -544
       objectReference: {fileID: 0}
     - target: {fileID: 5860038026190447696, guid: 0b98a683ae35a2f418504929971beb96, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 241
       objectReference: {fileID: 0}
     - target: {fileID: 5860038026190447696, guid: 0b98a683ae35a2f418504929971beb96, type: 3}
       propertyPath: m_LocalPosition.z

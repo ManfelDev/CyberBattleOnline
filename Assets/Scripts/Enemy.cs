@@ -11,10 +11,7 @@ public class Enemy : Character
 
     private void Update()
     {
-        if (target == null)
-        {
-            FindClosestPlayer();
-        }
+        FindClosestPlayer();
 
         if (target != null)
         {
@@ -24,7 +21,7 @@ public class Enemy : Character
 
     void FindClosestPlayer()
     {
-        Player[] players = FindObjectsByType<Player>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        var players = FindObjectsByType<Player>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
         Player closestPlayer = null;
         float minDistance = float.MaxValue;
 

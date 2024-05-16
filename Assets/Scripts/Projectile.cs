@@ -6,6 +6,8 @@ public class Projectile : MonoBehaviour
     [SerializeField] private int    damage = 10;
     [SerializeField] private float  lifeTime = 5.0f;
 
+    private GameObject shooter;
+
     private void Start()
     {
         Destroy(gameObject, lifeTime);
@@ -18,12 +20,20 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        var health = collision.GetComponent<Health>();
-        if (health != null && !health.isDead)
+        // Check if the object collided with is not the shooter
+        if (collision.gameObject != shooter)
         {
-            health.TakeDamage(damage);
-
-            Destroy(gameObject);
+            var health = collision.GetComponent<Health>();
+            if (health != null && !health.isDead)
+            {
+                health.TakeDamage(damage);
+                Destroy(gameObject);
+            }
         }
+    }
+
+    public void SetShooter(GameObject shooter)
+    {
+        this.shooter = shooter;
     }
 }
