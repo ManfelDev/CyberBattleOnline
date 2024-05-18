@@ -321,7 +321,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   healthBarImage: {fileID: 7959530639331630633}
-  drainRate: 0.2
   healthGradient:
     serializedVersion: 2
     key0: {r: 0.8679245, g: 0.015137066, b: 0, a: 1}
@@ -364,7 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22c476c02476928429e77c302279a81d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 100
+  speed: 80
   shotCooldown: 0.5
   bulletPrefab: {fileID: 409981435992928682, guid: 2970e9e0a9fe8e84dae7ee87087dac9f, type: 3}
   bulletSpawnPoint: {fileID: 2517958709311842990}
@@ -372,7 +371,8 @@ MonoBehaviour:
   shootingRange: 600
   stopDistance: 200
   retreatDistance: 150
-  rotationSpeed: 0.2
+  rotationSpeed: 0.75
+  shootingOfViewAngle: 45
 --- !u!1 &4438009700538413053
 GameObject:
   m_ObjectHideFlags: 0

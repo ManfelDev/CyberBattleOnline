@@ -3,8 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Health))]
 public class Character : MonoBehaviour
 {
-    [SerializeField] protected float speed = 200;
-    [SerializeField] protected float shotCooldown = 0.5f;
+    [SerializeField] protected float      speed = 200;
+    [SerializeField] protected float      shotCooldown = 0.5f;
     [SerializeField] protected GameObject bulletPrefab;
     [SerializeField] protected Transform  bulletSpawnPoint;
     [SerializeField] protected Transform  modelTransform;

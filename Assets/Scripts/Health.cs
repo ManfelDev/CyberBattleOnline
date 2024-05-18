@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] private int maxHealth = 100;
-    [SerializeField] private Image healthBarImage;
+    [SerializeField] private int      maxHealth = 100;
+    [SerializeField] private Image    healthBarImage;
     [SerializeField] private Gradient healthGradient;
 
     private int currentHealth;
