@@ -5,6 +5,7 @@ public class Health : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private Image healthBarImage;
+    [SerializeField] private Gradient healthGradient;
 
     private int currentHealth;
 
@@ -13,6 +14,7 @@ public class Health : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+        UpdateHealthBar();
     }
 
     public void TakeDamage(int damage, GameObject shooter)
@@ -49,10 +51,13 @@ public class Health : MonoBehaviour
     {
         currentHealth = maxHealth;
         this.gameObject.SetActive(true);
+        UpdateHealthBar();
     }
 
     public void UpdateHealthBar()
     {
-        healthBarImage.fillAmount = (float)currentHealth / maxHealth;
+        float healthPercent = (float)currentHealth / maxHealth;
+        healthBarImage.fillAmount = healthPercent;
+        healthBarImage.color = healthGradient.Evaluate(healthPercent);
     }
 }
