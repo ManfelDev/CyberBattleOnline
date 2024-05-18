@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class Player : Character
 {
-    private int score;   
+    private int score;
+
+    public int GetScore => score;
 
     protected override void Start()
     {
