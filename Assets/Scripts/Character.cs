@@ -7,6 +7,7 @@ public class Character : MonoBehaviour
     [SerializeField] protected float shotCooldown = 0.5f;
     [SerializeField] protected GameObject bulletPrefab;
     [SerializeField] protected Transform  bulletSpawnPoint;
+    [SerializeField] protected Transform  modelTransform;
 
     protected Health      health;
     protected Rigidbody2D rb;

@@ -44,7 +44,7 @@ public class Enemy : Character
 
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(Vector3.forward, direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.fixedDeltaTime * rotationSpeed);
+        modelTransform.rotation = Quaternion.Slerp(modelTransform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
 
         float distanceToTarget = Vector2.Distance(transform.position, target.position);
 

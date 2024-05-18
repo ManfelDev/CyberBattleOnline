@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 100;
+    [SerializeField] private Image healthBarImage;
 
     private int currentHealth;
 
@@ -16,6 +18,8 @@ public class Health : MonoBehaviour
     public void TakeDamage(int damage, GameObject shooter)
     {
         currentHealth -= damage;
+
+        UpdateHealthBar();
 
         if (isDead)
         {
@@ -45,5 +49,10 @@ public class Health : MonoBehaviour
     {
         currentHealth = maxHealth;
         this.gameObject.SetActive(true);
+    }
+
+    public void UpdateHealthBar()
+    {
+        healthBarImage.fillAmount = (float)currentHealth / maxHealth;
     }
 }
