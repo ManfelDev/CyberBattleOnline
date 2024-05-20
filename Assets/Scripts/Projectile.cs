@@ -32,6 +32,14 @@ public class Projectile : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public void SetShooter(GameObject shooter)
     {
         this.shooter = shooter;
