@@ -110,4 +110,9 @@ public class Enemy : Character
         Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
         Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
     }
+
+    public void IncreaseRotationSpeed(float amount)
+    {
+        rotationSpeed *= amount;
+    }
 }

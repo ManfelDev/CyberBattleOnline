@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] private int      maxHealth = 100;
-    [SerializeField] private Image    healthBarImage;
+    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private Image healthBarImage;
     [SerializeField] private Gradient healthGradient;
 
     private int currentHealth;
@@ -31,18 +31,20 @@ public class Health : MonoBehaviour
 
     private void Die(GameObject shooter)
     {
-        Player player = shooter.GetComponent<Player>();
+        Player player = GetComponent<Player>();
         if (player != null)
         {
             player.AddScore(10);
         }
 
-        if (GetComponent<Player>() != null)
+        if (player != null)
         {
+            RoundManager.Instance.PlayerDied();
             this.gameObject.SetActive(false);
         }
         else
         {
+            RoundManager.Instance.EnemyDied();
             Destroy(this.gameObject);
         }
     }
@@ -50,7 +52,6 @@ public class Health : MonoBehaviour
     public void Respawn()
     {
         currentHealth = maxHealth;
-        this.gameObject.SetActive(true);
         UpdateHealthBar();
     }
 

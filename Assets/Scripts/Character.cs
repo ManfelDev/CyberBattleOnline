@@ -36,4 +36,9 @@ public class Character : MonoBehaviour
         Projectile projectileScript = projectile.GetComponent<Projectile>();
         projectileScript.SetShooter(gameObject);
     }
+
+    public void IncreaseSpeed(float amount)
+    {
+        speed *= amount;
+    }
 }
