@@ -11,12 +11,12 @@ public class RoundManager : MonoBehaviour
     [SerializeField] private int              maxRound = 5;
     [SerializeField] private float            timeForNextRound = 3f;
     [SerializeField] private float            minSpawnDistanceFromPlayer = 5f;
-    [SerializeField] private int              baseEnemyCount = 2;
+    [SerializeField] private int              numberOfStartingEnemies = 2;
     [SerializeField] private float            enemyDifficultyMultiplier = 1.25f;
     [SerializeField] private GameObject       endOfRoundPanel;
     [SerializeField] private TextMeshProUGUI  endOfRoundText;
     [SerializeField] private TextMeshProUGUI  scoresText;
-    [SerializeField] private Transform[]      playerSpawnPoints;
+    [SerializeField] private Transform[]      playersSpawnPoints;
 
     private int         currentRound;
     private int         enemiesAlive;
@@ -41,7 +41,7 @@ public class RoundManager : MonoBehaviour
 
         for (int i = 0; i < players.Length; i++)
         {
-            players[i].transform.position = playerSpawnPoints[i % playerSpawnPoints.Length].position;
+            players[i].transform.position = playersSpawnPoints[i % playersSpawnPoints.Length].position;
         }
 
         SpawnEnemies();
@@ -77,12 +77,12 @@ public class RoundManager : MonoBehaviour
             return;
         }
 
-        int enemiesToSpawn = baseEnemyCount * currentRound;
+        int enemiesToSpawn = numberOfStartingEnemies * currentRound;
         enemiesAlive = enemiesToSpawn;
 
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            Vector2 spawnPosition = GetSpawnPositionAwayFromPlayer(players[Random.Range(0, players.Length)].transform.position);
+            Vector2 spawnPosition = GetSpawnPositionAwayFromPlayers();
             GameObject enemyInstance = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
             Enemy enemy = enemyInstance.GetComponent<Enemy>();
             if (enemy != null)
@@ -94,9 +94,10 @@ public class RoundManager : MonoBehaviour
         }
     }
 
-    private Vector2 GetSpawnPositionAwayFromPlayer(Vector2 playerPosition)
+    private Vector2 GetSpawnPositionAwayFromPlayers()
     {
         Vector2 randomPosition;
+        bool validPosition;
 
         do
         {
@@ -105,7 +106,17 @@ public class RoundManager : MonoBehaviour
                 Random.Range(bounds.min.x, bounds.max.x),
                 Random.Range(bounds.min.y, bounds.max.y)
             );
-        } while (Vector2.Distance(randomPosition, playerPosition) < minSpawnDistanceFromPlayer);
+
+            validPosition = true;
+            foreach (var player in players)
+            {
+                if (Vector2.Distance(randomPosition, player.transform.position) < minSpawnDistanceFromPlayer)
+                {
+                    validPosition = false;
+                    break;
+                }
+            }
+        } while (!validPosition);
 
         return randomPosition;
     }
@@ -154,7 +165,7 @@ public class RoundManager : MonoBehaviour
         for (int i = 0; i < players.Length; i++)
         {
             var player = players[i];
-            player.transform.position = playerSpawnPoints[i % playerSpawnPoints.Length].position;
+            player.transform.position = playersSpawnPoints[i % playersSpawnPoints.Length].position;
             player.gameObject.SetActive(true);
             player.GetComponent<Health>().Respawn();
         }
@@ -164,12 +175,12 @@ public class RoundManager : MonoBehaviour
 
     private void ShuffleSpawnPoints()
     {
-        for (int i = 0; i < playerSpawnPoints.Length; i++)
+        for (int i = 0; i < playersSpawnPoints.Length; i++)
         {
-            Transform temp = playerSpawnPoints[i];
-            int randomIndex = Random.Range(i, playerSpawnPoints.Length);
-            playerSpawnPoints[i] = playerSpawnPoints[randomIndex];
-            playerSpawnPoints[randomIndex] = temp;
+            Transform temp = playersSpawnPoints[i];
+            int randomIndex = Random.Range(i, playersSpawnPoints.Length);
+            playersSpawnPoints[i] = playersSpawnPoints[randomIndex];
+            playersSpawnPoints[randomIndex] = temp;
         }
     }
 

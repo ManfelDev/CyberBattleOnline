@@ -19751,12 +19751,12 @@ MonoBehaviour:
   maxRound: 2
   timeForNextRound: 3
   minSpawnDistanceFromPlayer: 750
-  baseEnemyCount: 1
+  numberOfStartingEnemies: 2
   enemyDifficultyMultiplier: 1.25
   endOfRoundPanel: {fileID: 38902496}
   endOfRoundText: {fileID: 505785746}
   scoresText: {fileID: 1598763249}
-  playerSpawnPoints:
+  playersSpawnPoints:
   - {fileID: 1687104782}
   - {fileID: 770035100}
   - {fileID: 399442846}
