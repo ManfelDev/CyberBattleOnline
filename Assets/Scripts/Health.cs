@@ -60,7 +60,7 @@ public class Health : MonoBehaviour
                 if (playerShooter != null)
                 {
                     playerShooter.AddScore(10);
-                    Debug.Log("Score: " + playerShooter.GetScore);
+                    Debug.Log("Score " + playerShooter.name + ": "+ playerShooter.GetScore);
                 }
             }
         }

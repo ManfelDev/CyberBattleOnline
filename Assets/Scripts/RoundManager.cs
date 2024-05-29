@@ -223,7 +223,7 @@ public class RoundManager : MonoBehaviour
         {
             endOfRoundPanel.SetActive(true);
             endOfRoundText.text = "Game Over!";
-            scoresText.text     = "Winner: " + GetWinner();
+            scoresText.text     = GetWinner();
         }
         else
         {
@@ -250,6 +250,21 @@ public class RoundManager : MonoBehaviour
     {
         var topPlayer = players.OrderByDescending(p => p.GetScore).First();
 
-        return topPlayer.name;
+        if (topPlayer.GetScore == 0)
+            return "No Winner";
+
+        if (players.Count(p => p.GetScore == topPlayer.GetScore) > 1)
+        {
+            var tiedPlayers = players.Where(p => p.GetScore == topPlayer.GetScore);
+            string tiedPlayersString = "";
+            foreach (var player in tiedPlayers)
+            {
+                tiedPlayersString += player.name + ", ";
+            }
+            return "Tie: " + tiedPlayersString.Substring(0, tiedPlayersString.Length - 2);
+        }
+
+        else
+            return "Winner: " + topPlayer.name;
     }
 }
