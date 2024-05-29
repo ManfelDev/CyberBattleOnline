@@ -19630,14 +19630,13 @@ MonoBehaviour:
   spawnArea: {fileID: 1649602231}
   minPlayers: 1
   maxRound: 5
+  timeForNextRound: 3
   minSpawnDistanceFromPlayer: 750
-  baseEnemyCount: 2
+  baseEnemyCount: 1
   enemyDifficultyMultiplier: 1.25
   endOfRoundPanel: {fileID: 38902496}
   endOfRoundText: {fileID: 505785746}
   scoresText: {fileID: 1598763249}
-  playerSpawnPoints:
-  - {fileID: 1687104782}
 --- !u!4 &841898604
 Transform:
   m_ObjectHideFlags: 0

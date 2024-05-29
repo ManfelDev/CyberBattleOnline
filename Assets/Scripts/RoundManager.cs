@@ -1,20 +1,26 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class RoundManager : MonoBehaviour
 {
-    [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private Collider2D spawnArea;
-    [SerializeField] private int        minPlayers = 1;
-    [SerializeField] private int        maxRound = 5;
-    [SerializeField] private float      minSpawnDistanceFromPlayer = 5f;
-    [SerializeField] private int        baseEnemyCount = 2;
-    [SerializeField] private float      enemyDifficultyMultiplier = 1.25f;
+    [SerializeField] private GameObject             enemyPrefab;
+    [SerializeField] private Collider2D             spawnArea;
+    [SerializeField] private int                    minPlayers = 1;
+    [SerializeField] private int                    maxRound = 5;
+    [SerializeField] private float                  timeForNextRound = 3f;
+    [SerializeField] private float                  minSpawnDistanceFromPlayer = 5f;
+    [SerializeField] private int                    baseEnemyCount = 2;
+    [SerializeField] private float                  enemyDifficultyMultiplier = 1.25f;
+    [SerializeField] private GameObject             endOfRoundPanel;
+    [SerializeField] private TMPro.TextMeshProUGUI  endOfRoundText;
+    [SerializeField] private TMPro.TextMeshProUGUI  scoresText;
 
-    private int currentRound;
-    private int enemiesAlive;
-    private int playersAlive;
-    private Player[] players;
+    private int         currentRound;
+    private int         enemiesAlive;
+    private int         playersAlive;
+    private Player[]    players;
+    private bool        isRoundTransitioning;
 
     public static RoundManager Instance { get; private set; }
 
@@ -32,7 +38,6 @@ public class RoundManager : MonoBehaviour
         currentRound = 1;
         SpawnEnemies();
 
-
         if (Instance == null)
         {
             Instance = this;
@@ -45,19 +50,19 @@ public class RoundManager : MonoBehaviour
 
     private void Update()
     {
-        if (enemiesAlive == 0)
+        if (enemiesAlive == 0 && !isRoundTransitioning)
         {
-            NextRound();
+            StartCoroutine(NextRound());
         }
 
-        if (playersAlive == 0)
+        if (playersAlive == 0 && !isRoundTransitioning)
         {
             EliminateRemainingEnemies();
-            NextRound();
+            StartCoroutine(NextRound());
         }
     }
 
-    public void SpawnEnemies()
+    private void SpawnEnemies()
     {
         if (playersAlive < minPlayers)
         {
@@ -97,17 +102,29 @@ public class RoundManager : MonoBehaviour
         return randomPosition;
     }
 
-    public void NextRound()
+    private IEnumerator NextRound()
     {
+        isRoundTransitioning = true;
+
         if (currentRound >= maxRound)
         {
             Debug.Log("Game Over!");
-            return;
+            yield break;
         }
+
+        StopAllPlayers();
+        DisplayEndOfRoundScreen();
+
+        yield return new WaitForSecondsRealtime(timeForNextRound);
+
+        endOfRoundPanel.SetActive(false);
+        StartAllPlayers();
         currentRound++;
 
         RespawnPlayers();
         SpawnEnemies();
+
+        isRoundTransitioning = false;
     }
 
     public void EnemyDied()
@@ -131,6 +148,22 @@ public class RoundManager : MonoBehaviour
         Debug.Log("Respawning all players. Players Alive: " + playersAlive);
     }
 
+    private void StopAllPlayers()
+    {
+        foreach (var player in players)
+        {
+            player.GetComponent<Player>().enabled = false;
+        }
+    }
+
+    private void StartAllPlayers()
+    {
+        foreach (var player in players)
+        {
+            player.GetComponent<Player>().enabled = true;
+        }
+    }
+
     private void EliminateRemainingEnemies()
     {
         Enemy[] remainingEnemies = FindObjectsOfType<Enemy>();
@@ -146,5 +179,23 @@ public class RoundManager : MonoBehaviour
         // Draw min spawn distance circle
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(Vector3.zero, minSpawnDistanceFromPlayer);
+    }
+
+    private void DisplayEndOfRoundScreen()
+    {
+        endOfRoundPanel.SetActive(true);
+        endOfRoundText.text = "End of Round " + currentRound;
+        scoresText.text = GetScores();
+    }
+
+    private string GetScores()
+    {
+        string scores = "";
+        
+        foreach (var player in players)
+        {
+            scores += player.name + ": " + player.GetScore + "\n";
+        }
+        return scores;
     }
 }
