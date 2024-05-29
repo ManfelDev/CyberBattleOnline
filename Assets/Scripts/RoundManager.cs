@@ -15,6 +15,7 @@ public class RoundManager : MonoBehaviour
     [SerializeField] private GameObject             endOfRoundPanel;
     [SerializeField] private TMPro.TextMeshProUGUI  endOfRoundText;
     [SerializeField] private TMPro.TextMeshProUGUI  scoresText;
+    [SerializeField] private Transform[]            playerSpawnPoints;
 
     private int         currentRound;
     private int         enemiesAlive;
@@ -36,6 +37,12 @@ public class RoundManager : MonoBehaviour
         }
 
         currentRound = 1;
+
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i].transform.position = playerSpawnPoints[i % playerSpawnPoints.Length].position;
+        }
+
         SpawnEnemies();
 
         if (Instance == null)
@@ -112,6 +119,7 @@ public class RoundManager : MonoBehaviour
             yield break;
         }
 
+        RespawnPlayers();
         StopAllPlayers();
         DisplayEndOfRoundScreen();
 
@@ -121,7 +129,6 @@ public class RoundManager : MonoBehaviour
         StartAllPlayers();
         currentRound++;
 
-        RespawnPlayers();
         SpawnEnemies();
 
         isRoundTransitioning = false;
@@ -139,13 +146,28 @@ public class RoundManager : MonoBehaviour
 
     private void RespawnPlayers()
     {
-        foreach (var player in players)
+        ShuffleSpawnPoints();
+
+        for (int i = 0; i < players.Length; i++)
         {
+            var player = players[i];
+            player.transform.position = playerSpawnPoints[i % playerSpawnPoints.Length].position;
             player.gameObject.SetActive(true);
             player.GetComponent<Health>().Respawn();
         }
         playersAlive = players.Length;
         Debug.Log("Respawning all players. Players Alive: " + playersAlive);
+    }
+
+    private void ShuffleSpawnPoints()
+    {
+        for (int i = 0; i < playerSpawnPoints.Length; i++)
+        {
+            Transform temp = playerSpawnPoints[i];
+            int randomIndex = Random.Range(i, playerSpawnPoints.Length);
+            playerSpawnPoints[i] = playerSpawnPoints[randomIndex];
+            playerSpawnPoints[randomIndex] = temp;
+        }
     }
 
     private void StopAllPlayers()
