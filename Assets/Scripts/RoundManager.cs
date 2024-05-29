@@ -1,21 +1,22 @@
 using System.Collections;
-using Unity.VisualScripting;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class RoundManager : MonoBehaviour
 {
-    [SerializeField] private GameObject             enemyPrefab;
-    [SerializeField] private Collider2D             spawnArea;
-    [SerializeField] private int                    minPlayers = 1;
-    [SerializeField] private int                    maxRound = 5;
-    [SerializeField] private float                  timeForNextRound = 3f;
-    [SerializeField] private float                  minSpawnDistanceFromPlayer = 5f;
-    [SerializeField] private int                    baseEnemyCount = 2;
-    [SerializeField] private float                  enemyDifficultyMultiplier = 1.25f;
-    [SerializeField] private GameObject             endOfRoundPanel;
-    [SerializeField] private TMPro.TextMeshProUGUI  endOfRoundText;
-    [SerializeField] private TMPro.TextMeshProUGUI  scoresText;
-    [SerializeField] private Transform[]            playerSpawnPoints;
+    [SerializeField] private GameObject       enemyPrefab;
+    [SerializeField] private Collider2D       spawnArea;
+    [SerializeField] private int              minPlayers = 1;
+    [SerializeField] private int              maxRound = 5;
+    [SerializeField] private float            timeForNextRound = 3f;
+    [SerializeField] private float            minSpawnDistanceFromPlayer = 5f;
+    [SerializeField] private int              baseEnemyCount = 2;
+    [SerializeField] private float            enemyDifficultyMultiplier = 1.25f;
+    [SerializeField] private GameObject       endOfRoundPanel;
+    [SerializeField] private TextMeshProUGUI  endOfRoundText;
+    [SerializeField] private TextMeshProUGUI  scoresText;
+    [SerializeField] private Transform[]      playerSpawnPoints;
 
     private int         currentRound;
     private int         enemiesAlive;
@@ -115,7 +116,9 @@ public class RoundManager : MonoBehaviour
 
         if (currentRound >= maxRound)
         {
-            Debug.Log("Game Over!");
+            DisplayEndOfRoundScreen();
+            StopAllPlayers();
+            // GameOver();
             yield break;
         }
 
@@ -205,19 +208,37 @@ public class RoundManager : MonoBehaviour
 
     private void DisplayEndOfRoundScreen()
     {
-        endOfRoundPanel.SetActive(true);
-        endOfRoundText.text = "End of Round " + currentRound;
-        scoresText.text = GetScores();
+        if (currentRound.Equals(maxRound))
+        {
+            endOfRoundPanel.SetActive(true);
+            endOfRoundText.text = "Game Over!";
+            scoresText.text     = "Winner: " + GetWinner();
+        }
+        else
+        {
+            endOfRoundPanel.SetActive(true);
+            endOfRoundText.text = "End of Round " + currentRound;
+            scoresText.text     = GetScores();
+        }
     }
 
     private string GetScores()
     {
+        var topPlayers = players.OrderByDescending(p => p.GetScore).Take(3);
         string scores = "";
         
-        foreach (var player in players)
+        foreach (var player in topPlayers)
         {
             scores += player.name + ": " + player.GetScore + "\n";
         }
+
         return scores;
+    }
+
+    private string GetWinner()
+    {
+        var topPlayer = players.OrderByDescending(p => p.GetScore).First();
+
+        return topPlayer.name;
     }
 }
