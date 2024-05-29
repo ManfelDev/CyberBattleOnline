@@ -32,20 +32,37 @@ public class Health : MonoBehaviour
     private void Die(GameObject shooter)
     {
         Player player = GetComponent<Player>();
-        if (player != null)
-        {
-            player.AddScore(10);
-        }
 
         if (player != null)
         {
             RoundManager.Instance.PlayerDied();
             this.gameObject.SetActive(false);
+
+            if (shooter != null)
+            {
+                Player playerShooter = shooter.GetComponent<Player>();
+                if (playerShooter != null)
+                {
+                    playerShooter.AddScore(20);
+                    Debug.Log("Score: " + playerShooter.GetScore);
+                }
+            }
         }
+
         else
         {
             RoundManager.Instance.EnemyDied();
             Destroy(this.gameObject);
+
+            if (shooter != null)
+            {
+                Player playerShooter = shooter.GetComponent<Player>();
+                if (playerShooter != null)
+                {
+                    playerShooter.AddScore(10);
+                    Debug.Log("Score: " + playerShooter.GetScore);
+                }
+            }
         }
     }
 

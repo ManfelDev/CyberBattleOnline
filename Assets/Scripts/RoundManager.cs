@@ -53,7 +53,6 @@ public class RoundManager : MonoBehaviour
         if (playersAlive == 0)
         {
             EliminateRemainingEnemies();
-            RespawnPlayers();
             NextRound();
         }
     }
@@ -106,13 +105,14 @@ public class RoundManager : MonoBehaviour
             return;
         }
         currentRound++;
+
+        RespawnPlayers();
         SpawnEnemies();
     }
 
     public void EnemyDied()
     {
         enemiesAlive--;
-        Debug.Log($"Enemy died. Enemies Alive: {enemiesAlive}");
     }
 
     public void PlayerDied()

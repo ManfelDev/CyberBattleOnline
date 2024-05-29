@@ -16,6 +16,7 @@ public class Character : MonoBehaviour
     protected virtual void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        health = GetComponent<Health>();
     }
 
     public void TakeDamage(int damage)
