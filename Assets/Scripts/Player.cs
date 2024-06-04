@@ -1,9 +1,11 @@
 using UnityEngine;
+using Unity.Netcode;
 
 public class Player : Character
 {
-    private int score;
+    private int     score;
     private Vector2 movement;
+    private float   lastShotTime;
 
     public int GetScore => score;
 
@@ -57,5 +59,43 @@ public class Player : Character
     public void Respawn()
     {
         health.Respawn();
+    }
+
+    protected void Shoot()
+    {
+        if (Time.time - lastShotTime < shotCooldown)
+        {
+            return;
+        }
+
+        lastShotTime = Time.time;
+
+        PrimaryFireServerRpc();
+        SpawnDummyProjectile();
+    }
+
+    [ClientRpc]
+    private void SpawnDummyProjectileClientRpc()
+    {
+        if (IsOwner) return;
+
+        SpawnDummyProjectile();
+    }
+
+    [ServerRpc]
+    private void PrimaryFireServerRpc()
+    {
+        GameObject projectileInstance = Instantiate(serverLaserPrefab, 
+                                                    laserSpawnPoint.position, 
+                                                    laserSpawnPoint.rotation);  
+
+        projectileInstance.GetComponent<Projectile>().SetShooter(gameObject);
+
+        SpawnDummyProjectileClientRpc();
+    }
+
+    private void SpawnDummyProjectile()
+    {
+        Instantiate(clientLaserPrefab, laserSpawnPoint.position, laserSpawnPoint.rotation);
     }
 }

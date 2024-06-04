@@ -649,11 +649,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb8ebe332db33bf46be0a80821c3f3a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clientLaserPrefab: {fileID: 32514772961718549, guid: b3bf8dce1e149024c93eca396bcb74cc, type: 3}
+  serverLaserPrefab: {fileID: 1369348502242646051, guid: d9d8397116007ae4aab7571b7ab88af9, type: 3}
+  laserSpawnPoint: {fileID: 8641341619277349726}
+  modelTransform: {fileID: 1102717847402243067}
   speed: 200
   shotCooldown: 0.5
-  bulletPrefab: {fileID: 409981435992928682, guid: 2970e9e0a9fe8e84dae7ee87087dac9f, type: 3}
-  bulletSpawnPoint: {fileID: 8641341619277349726}
-  modelTransform: {fileID: 1102717847402243067}
 --- !u!1 &8875374393570493609
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,7 +21,7 @@ public class Projectile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // Check if the object collided with is not the shooter
-        if (collision.gameObject != shooter)
+        /*if (collision.gameObject != shooter)
         {
             var health = collision.GetComponent<Health>();
             if (health != null && !health.isDead)
@@ -29,6 +29,11 @@ public class Projectile : MonoBehaviour
                 health.TakeDamage(damage, shooter);
                 Destroy(gameObject);
             }
+        }*/
+
+        if (collision.gameObject.layer != LayerMask.NameToLayer("Wall"))
+        {
+            Destroy(gameObject);
         }
     }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 
 public class Enemy : Character
 {
@@ -8,8 +9,9 @@ public class Enemy : Character
     [SerializeField] private float rotationSpeed = 5.0f;
     [SerializeField] private float shootingAngle = 45.0f;
 
-    private Transform target;
-    private Vector3 movePosition;
+    private Transform   target;
+    private Vector3     movePosition;
+    private float       lastShotTime;
 
     private void Update()
     {
@@ -128,5 +130,34 @@ public class Enemy : Character
     public void IncreaseRotationSpeed(float amount)
     {
         rotationSpeed *= amount;
+    }
+
+    private void Shoot()
+    {
+        if (Time.time - lastShotTime < shotCooldown)
+        {
+            return;
+        }
+
+        lastShotTime = Time.time;
+
+        PrimaryFireServerRpc();
+    }
+
+    [ServerRpc]
+    private void PrimaryFireServerRpc()
+    {
+        GameObject projectileInstance = Instantiate(serverLaserPrefab, 
+                                                    laserSpawnPoint.position, 
+                                                    laserSpawnPoint.rotation);  
+
+        projectileInstance.GetComponent<Projectile>().SetShooter(gameObject);
+
+        SpawnDummyProjectile();
+    }
+
+    private void SpawnDummyProjectile()
+    {
+        Instantiate(clientLaserPrefab, laserSpawnPoint.position, laserSpawnPoint.rotation);
     }
 }

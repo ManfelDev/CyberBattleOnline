@@ -4,15 +4,18 @@ using Unity.Netcode;
 [RequireComponent(typeof(Health))]
 public class Character : NetworkBehaviour
 {
+    [Header("References")]
+    [SerializeField] protected GameObject clientLaserPrefab;
+    [SerializeField] protected GameObject serverLaserPrefab;
+    [SerializeField] protected Transform  laserSpawnPoint;
+    [SerializeField] protected Transform  modelTransform;
+
+    [Header("Stats")]
     [SerializeField] protected float      speed = 200;
     [SerializeField] protected float      shotCooldown = 0.5f;
-    [SerializeField] protected GameObject bulletPrefab;
-    [SerializeField] protected Transform  bulletSpawnPoint;
-    [SerializeField] protected Transform  modelTransform;
 
     protected Health      health;
     protected Rigidbody2D rb;
-    private float         lastShotTime;
 
     public override void OnNetworkSpawn() 
     {
@@ -23,20 +26,6 @@ public class Character : NetworkBehaviour
     public void TakeDamage(int damage)
     {
         health.TakeDamage(damage, this.gameObject);
-    }
-
-    protected void Shoot()
-    {
-        if (Time.time - lastShotTime < shotCooldown)
-        {
-            return;
-        }
-
-        lastShotTime = Time.time;
-
-        GameObject projectile = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        Projectile projectileScript = projectile.GetComponent<Projectile>();
-        projectileScript.SetShooter(gameObject);
     }
 
     public void IncreaseSpeed(float amount)
