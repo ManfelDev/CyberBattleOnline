@@ -87,9 +87,12 @@ public class Player : Character
     {
         GameObject projectileInstance = Instantiate(serverLaserPrefab, 
                                                     laserSpawnPoint.position, 
-                                                    laserSpawnPoint.rotation);  
+                                                    laserSpawnPoint.rotation);
 
-        projectileInstance.GetComponent<Projectile>().SetShooter(gameObject);
+        if (projectileInstance.TryGetComponent<Projectile>(out Projectile dealDamage))
+        {
+            dealDamage.SetShooter(OwnerClientId);
+        }
 
         SpawnDummyProjectileClientRpc();
     }

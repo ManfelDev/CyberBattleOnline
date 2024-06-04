@@ -23,11 +23,6 @@ public class Character : NetworkBehaviour
         health = GetComponent<Health>();
     }
 
-    public void TakeDamage(int damage)
-    {
-        health.TakeDamage(damage, this.gameObject);
-    }
-
     public void IncreaseSpeed(float amount)
     {
         speed *= amount;

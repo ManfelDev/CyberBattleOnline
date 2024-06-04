@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using Unity.Netcode;
 using System;
 
@@ -21,12 +20,12 @@ public class Health : NetworkBehaviour
         CurrentHealth.Value = maxHealth;
     }
 
-    public void TakeDamage(int damage, GameObject shooter)
+    public void TakeDamage(int damage)
     {
-        ModifyHealth(-damage, shooter);
+        ModifyHealth(-damage);
     }
 
-    private void ModifyHealth(int amount, GameObject shooter)
+    private void ModifyHealth(int amount)
     {
         if (isDead) return;
 

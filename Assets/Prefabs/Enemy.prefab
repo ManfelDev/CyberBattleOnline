@@ -118,6 +118,7 @@ GameObject:
   - component: {fileID: 4874501942181117235}
   - component: {fileID: 8031593131296641015}
   - component: {fileID: 4395926784968858408}
+  - component: {fileID: 2197046174828007511}
   m_Layer: 0
   m_Name: Health Bar
   m_TagString: Untagged
@@ -209,6 +210,50 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2197046174828007511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3609692214240360073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0ab7429685a63d4c85e27a60346cde7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: {fileID: 4972799749776073680}
+  healthBarImage: {fileID: 7959530639331630633}
+  healthGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 0.98564017, g: 1, b: 0, a: 1}
+    key2: {r: 0.12300229, g: 1, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 32768
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: 0
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 2
 --- !u!1 &4361237396830704837
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,37 +366,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  healthBarImage: {fileID: 7959530639331630633}
-  healthGradient:
-    serializedVersion: 2
-    key0: {r: 0.8679245, g: 0.015137066, b: 0, a: 1}
-    key1: {r: 1, g: 0.757764, b: 0, a: 1}
-    key2: {r: 0, g: 0.764151, b: 0.09014033, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 32768
-    ctime2: 65535
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_ColorSpace: -1
-    m_NumColorKeys: 3
-    m_NumAlphaKeys: 2
+  CurrentHealth:
+    m_InternalValue: 0
 --- !u!114 &1477919827977577667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,11 +380,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22c476c02476928429e77c302279a81d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clientLaserPrefab: {fileID: 0}
+  serverLaserPrefab: {fileID: 0}
+  laserSpawnPoint: {fileID: 0}
+  modelTransform: {fileID: 3774469728460607245}
   speed: 80
   shotCooldown: 0.5
-  bulletPrefab: {fileID: 409981435992928682, guid: 2970e9e0a9fe8e84dae7ee87087dac9f, type: 3}
-  bulletSpawnPoint: {fileID: 2517958709311842990}
-  modelTransform: {fileID: 3774469728460607245}
   shootingRange: 600
   stopDistance: 200
   retreatDistance: 150

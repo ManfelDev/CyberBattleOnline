@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 409981435992928682, guid: 2970e9e0a9fe8e84dae7ee87087dac9f, type: 3}
       propertyPath: m_Name
-      value: Laser Variant
+      value: ClientLaser
       objectReference: {fileID: 0}
     - target: {fileID: 1335566532044598677, guid: 2970e9e0a9fe8e84dae7ee87087dac9f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -51,6 +51,10 @@ PrefabInstance:
     - target: {fileID: 1335566532044598677, guid: 2970e9e0a9fe8e84dae7ee87087dac9f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6871146362797932237, guid: 2970e9e0a9fe8e84dae7ee87087dac9f, type: 3}
+      propertyPath: isClientLaser
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

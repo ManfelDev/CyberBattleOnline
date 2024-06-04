@@ -172,5 +172,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1200
-  damage: 50
+  damage: 10
   lifeTime: 0.5
+  isClientLaser: 0

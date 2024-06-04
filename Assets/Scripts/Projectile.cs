@@ -1,12 +1,14 @@
 using UnityEngine;
+using Unity.Netcode;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private float  speed = 1000.0f;
-    [SerializeField] private int    damage = 10;
-    [SerializeField] private float  lifeTime = 1.0f;
+    [SerializeField] private float speed = 1000.0f;
+    [SerializeField] private int damage = 10;
+    [SerializeField] private float lifeTime = 1.0f;
+    [SerializeField] private bool isClientLaser = false;
 
-    private GameObject shooter;
+    private ulong shooterId;
 
     private void Start()
     {
@@ -20,16 +22,21 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Check if the object collided with is not the shooter
-        /*if (collision.gameObject != shooter)
+        if (collision.attachedRigidbody == null) return;
+
+        if (collision.attachedRigidbody.TryGetComponent<NetworkObject>(out var networkObject))
         {
-            var health = collision.GetComponent<Health>();
-            if (health != null && !health.isDead)
+            if (shooterId == networkObject.OwnerClientId) return;
+        }
+
+        if (!isClientLaser)
+        {
+            if (collision.attachedRigidbody.TryGetComponent<Health>(out Health health))
             {
-                health.TakeDamage(damage, shooter);
+                health.TakeDamage(damage);
                 Destroy(gameObject);
             }
-        }*/
+        }
 
         if (collision.gameObject.layer != LayerMask.NameToLayer("Wall"))
         {
@@ -45,8 +52,13 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    public void SetShooter(GameObject shooter)
+    public void SetShooter(ulong shooterId)
     {
-        this.shooter = shooter;
+        this.shooterId = shooterId;
+    }
+
+    public void SetClientLaser(bool isClientLaser)
+    {
+        this.isClientLaser = isClientLaser;
     }
 }
