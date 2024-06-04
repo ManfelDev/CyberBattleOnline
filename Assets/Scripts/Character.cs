@@ -1,7 +1,8 @@
 using UnityEngine;
+using Unity.Netcode;
 
 [RequireComponent(typeof(Health))]
-public class Character : MonoBehaviour
+public class Character : NetworkBehaviour
 {
     [SerializeField] protected float      speed = 200;
     [SerializeField] protected float      shotCooldown = 0.5f;
@@ -13,7 +14,7 @@ public class Character : MonoBehaviour
     protected Rigidbody2D rb;
     private float         lastShotTime;
 
-    protected virtual void Start()
+    public override void OnNetworkSpawn() 
     {
         rb = GetComponent<Rigidbody2D>();
         health = GetComponent<Health>();

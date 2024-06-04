@@ -9,11 +9,20 @@ public class Enemy : Character
     [SerializeField] private float shootingAngle = 45.0f;
 
     private Transform target;
+    private Vector3 movePosition;
 
     private void Update()
     {
         FindClosestPlayer();
 
+        if (target != null)
+        {
+            RotateTowardsTarget();
+        }
+    }
+
+    private void FixedUpdate()
+    {
         if (target != null)
         {
             MoveAndShoot();
@@ -39,25 +48,30 @@ public class Enemy : Character
         target = closestPlayer != null ? closestPlayer.transform : null;
     }
 
-    void MoveAndShoot()
+    void RotateTowardsTarget()
     {
         if (target == null) return;
 
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f);
         modelTransform.rotation = Quaternion.Slerp(modelTransform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+    }
+
+    void MoveAndShoot()
+    {
+        if (target == null) return;
 
         float distanceToTarget = Vector2.Distance(transform.position, target.position);
 
         if (distanceToTarget > stopDistance)
         {
-            Vector3 newPosition = Vector3.MoveTowards(transform.position, target.position, speed * Time.fixedDeltaTime);
-            rb.MovePosition(newPosition);
+            movePosition = Vector3.MoveTowards(transform.position, target.position, speed * Time.fixedDeltaTime);
+            rb.MovePosition(movePosition);
         }
         else if (distanceToTarget < retreatDistance)
         {
-            Vector3 newPosition = Vector3.MoveTowards(transform.position, target.position, -speed * Time.fixedDeltaTime);
-            rb.MovePosition(newPosition);
+            movePosition = Vector3.MoveTowards(transform.position, target.position, -speed * Time.fixedDeltaTime);
+            rb.MovePosition(movePosition);
         }
 
         if (IsAnyPlayerInViewAndRange())
