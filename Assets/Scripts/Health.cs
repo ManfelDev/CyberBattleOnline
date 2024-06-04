@@ -1,35 +1,50 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Netcode;
+using System;
 
-public class Health : MonoBehaviour
+public class Health : NetworkBehaviour
 {
-    [SerializeField] private int        maxHealth = 100;
-    [SerializeField] private Image      healthBarImage;
-    [SerializeField] private Gradient   healthGradient;
+    [SerializeField] private int maxHealth = 100;
 
-    private int currentHealth;
+    public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>();
 
-    public bool isDead => (currentHealth <= 0);
+    public bool isDead => (CurrentHealth.Value <= 0);
+    public int MaxHealth => maxHealth;
 
-    void Start()
+    public Action<Health> OnDie;
+
+    public override void OnNetworkSpawn()
     {
-        currentHealth = maxHealth;
-        UpdateHealthBar();
+        if (!IsServer) return;
+
+        CurrentHealth.Value = maxHealth;
     }
 
     public void TakeDamage(int damage, GameObject shooter)
     {
-        currentHealth -= damage;
+        ModifyHealth(-damage, shooter);
+    }
 
-        UpdateHealthBar();
+    private void ModifyHealth(int amount, GameObject shooter)
+    {
+        if (isDead) return;
+
+        int newHealth = CurrentHealth.Value + amount;
+        CurrentHealth.Value = Mathf.Clamp(newHealth, 0, maxHealth);
 
         if (isDead)
         {
-            Die(shooter);
+            OnDie?.Invoke(this);
         }
     }
 
-    private void Die(GameObject shooter)
+    public void Respawn()
+    {
+        CurrentHealth.Value = maxHealth;
+    }
+
+    /*private void Die(GameObject shooter)
     {
         Player player = GetComponent<Player>();
 
@@ -64,18 +79,5 @@ public class Health : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void Respawn()
-    {
-        currentHealth = maxHealth;
-        UpdateHealthBar();
-    }
-
-    public void UpdateHealthBar()
-    {
-        float healthPercent = (float)currentHealth / maxHealth;
-        healthBarImage.fillAmount = healthPercent;
-        healthBarImage.color = healthGradient.Evaluate(healthPercent);
-    }
+    }*/
 }
