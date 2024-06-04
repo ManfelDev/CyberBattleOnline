@@ -2,30 +2,42 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [SerializeField] private float smoothSpeed = 1.0f;
+    [SerializeField] private float smoothSpeed = 0.01f;
 
-    public Transform  target;
+    private Transform target;
 
-    void FixedUpdate()
+    void Start()
+    {
+        target = FindLocalPlayer();
+    }
+
+    void Update()
     {
         if (target == null)
         {
-            var player = FindObjectOfType<Player>();
-            target = (player) ? (player.transform) : (null);
+            target = FindLocalPlayer();
         }
 
         if (target != null)
         {
-            Vector3 targetPosition = target.position;
-            targetPosition.z = transform.position.z;
+            Vector3 desiredPosition = target.position;
+            desiredPosition.z = transform.position.z;
 
-            Vector3 positionDifference = targetPosition - transform.position;
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+            transform.position = smoothedPosition;
+        }
+    }
 
-            if (Time.deltaTime > 0)
+    private Transform FindLocalPlayer()
+    {
+        var players = FindObjectsOfType<Player>();
+        foreach (var player in players)
+        {
+            if (player.IsOwner) 
             {
-                float factor = Mathf.Clamp01(Time.fixedDeltaTime / smoothSpeed);
-                transform.position = transform.position + positionDifference * factor;
+                return player.transform;
             }
         }
+        return null;
     }
 }
