@@ -39,7 +39,7 @@ public class Player : Character
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
     }
 
-    private void LateUpdate() 
+    private void LateUpdate()
     {
         if (!IsOwner) return;
 
@@ -81,35 +81,38 @@ public class Player : Character
 
         lastShotTime = Time.time;
 
-        PrimaryFireServerRpc();
-        SpawnDummyProjectile();
+        Vector3 spawnPos = laserSpawnPoint.position;
+        Vector3 direction = laserSpawnPoint.up;
+
+        PrimaryFireServerRpc(spawnPos, direction);
+        SpawnDummyProjectile(spawnPos, direction);
     }
 
     [ClientRpc]
-    private void SpawnDummyProjectileClientRpc()
+    private void SpawnDummyProjectileClientRpc(Vector3 spawnPos, Vector3 direction)
     {
         if (IsOwner) return;
 
-        SpawnDummyProjectile();
+        SpawnDummyProjectile(spawnPos, direction);
     }
 
     [ServerRpc]
-    private void PrimaryFireServerRpc()
+    private void PrimaryFireServerRpc(Vector3 spawnPos, Vector3 direction)
     {
-        GameObject projectileInstance = Instantiate(serverLaserPrefab, 
-                                                    laserSpawnPoint.position, 
-                                                    laserSpawnPoint.rotation);
+        GameObject projectileInstance = Instantiate(serverLaserPrefab, spawnPos, Quaternion.identity);
+        projectileInstance.transform.up = direction;
 
-        if (projectileInstance.TryGetComponent<Projectile>(out Projectile dealDamage))
+        if (projectileInstance.TryGetComponent<Projectile>(out Projectile projectile))
         {
-            dealDamage.SetShooter(OwnerClientId);
+            projectile.SetShooter(OwnerClientId);
         }
 
-        SpawnDummyProjectileClientRpc();
+        SpawnDummyProjectileClientRpc(spawnPos, direction);
     }
 
-    private void SpawnDummyProjectile()
+    private void SpawnDummyProjectile(Vector3 spawnPos, Vector3 direction)
     {
-        Instantiate(clientLaserPrefab, laserSpawnPoint.position, laserSpawnPoint.rotation);
+        GameObject projectileInstance = Instantiate(clientLaserPrefab, spawnPos, Quaternion.identity);
+        projectileInstance.transform.up = direction;
     }
 }

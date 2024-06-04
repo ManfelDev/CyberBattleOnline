@@ -3,10 +3,10 @@ using Unity.Netcode;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private float speed = 1000.0f;
-    [SerializeField] private int damage = 10;
-    [SerializeField] private float lifeTime = 1.0f;
-    [SerializeField] private bool isClientLaser = false;
+    [SerializeField] private float  speed = 1000.0f;
+    [SerializeField] private int    damage = 10;
+    [SerializeField] private float  lifeTime = 1.0f;
+    [SerializeField] private bool   isClientLaser = false;
 
     private ulong shooterId;
 
