@@ -3,18 +3,18 @@ using Unity.Netcode;
 
 public class Player : Character
 {
-    private int     score;
     private Vector2 movement;
     private float   lastShotTime;
 
-    public int GetScore => score;
+    public NetworkVariable<int> Score = new NetworkVariable<int>();
+    public int GetScore => Score.Value;
 
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
 
         base.OnNetworkSpawn();
-        score = 0;
+        Score.Value = 0;
     }
 
     void Update()
@@ -53,12 +53,23 @@ public class Player : Character
 
     public void AddScore(int amount)
     {
-        score += amount;
+        Score.Value += amount;
     }
 
     public void Respawn()
     {
         health.Respawn();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.TryGetComponent<BonusScore>(out BonusScore bonusScore)) return;
+
+        int score = bonusScore.Pick();
+
+        if (!IsServer) return;
+
+        Score.Value += score;
     }
 
     protected void Shoot()

@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 4117072665793782093}
   - component: {fileID: 4462653524092771431}
   - component: {fileID: 1090521379482190493}
-  - component: {fileID: 5599855139243984215}
+  - component: {fileID: 2802692929395461301}
   m_Layer: 0
   m_Name: BonusScore
   m_TagString: Untagged
@@ -238,7 +238,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &5599855139243984215
+--- !u!114 &2802692929395461301
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5710283217218143447}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e4a9829de740f0429b8a52de4869c7b, type: 3}
+  m_Script: {fileID: 11500000, guid: 3fcfec4c48b823d4d8d51ae6b4387c72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderers:
