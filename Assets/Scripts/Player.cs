@@ -1,28 +1,47 @@
 using UnityEngine;
 using Unity.Netcode;
 using TMPro;
+using Unity.Collections;
 
 public class Player : Character
 {
     [SerializeField] private TextMeshProUGUI playerNameText;
 
     private Vector2 movement;
-    private float   lastShotTime;
+    private float lastShotTime;
+    public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
 
     public NetworkVariable<int> Score = new NetworkVariable<int>();
     public int GetScore => Score.Value;
 
     public override void OnNetworkSpawn()
     {
-        if (!IsOwner) return;
+        SetPlayerName(PlayerName.Value, PlayerName.Value);
+        PlayerName.OnValueChanged += SetPlayerName;
+
+        if (!IsLocalPlayer) return;
 
         base.OnNetworkSpawn();
-        Score.Value = 0;
+        
+        SubmitPlayerNameServerRpc(JoinManager.playerName);
+    }
+
+    public override void OnDestroy()
+    {
+        if (!IsLocalPlayer)
+
+        PlayerName.OnValueChanged -= SetPlayerName;
+    }
+
+    [ServerRpc]
+    private void SubmitPlayerNameServerRpc(FixedString32Bytes name, ServerRpcParams rpcParams = default)
+    {
+        PlayerName.Value = name;
     }
 
     void Update()
     {
-        if (!IsOwner) return;
+        if (!IsLocalPlayer) return;
 
         // Get input for movement
         movement = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -36,7 +55,7 @@ public class Player : Character
 
     private void FixedUpdate()
     {
-        if (!IsOwner) return;
+        if (!IsLocalPlayer) return;
 
         // Move the player
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
@@ -44,7 +63,7 @@ public class Player : Character
 
     private void LateUpdate()
     {
-        if (!IsOwner) return;
+        if (!IsLocalPlayer) return;
 
         // Get mouse position for rotation
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -94,7 +113,7 @@ public class Player : Character
     [ClientRpc]
     private void SpawnDummyProjectileClientRpc(Vector3 spawnPos, Vector3 direction)
     {
-        if (IsOwner) return;
+        if (IsLocalPlayer) return;
 
         SpawnDummyProjectile(spawnPos, direction);
     }
@@ -119,8 +138,8 @@ public class Player : Character
         projectileInstance.transform.up = direction;
     }
 
-    public void SetPlayerName(string name)
+    private void SetPlayerName(FixedString32Bytes oldName, FixedString32Bytes newName)
     {
-        playerNameText.text = name;
+        playerNameText.text = newName.ToString();
     }
 }

@@ -12,6 +12,7 @@ using Unity.Services.Relay.Models;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
+using Unity.Collections;
 
 using Debug = UnityEngine.Debug;
 #if UNITY_STANDALONE_WIN
@@ -267,6 +268,13 @@ public class NetworkSetup : MonoBehaviour
         var prefabNetworkObject = spawnedObject.GetComponent<NetworkObject>();
         prefabNetworkObject.SpawnAsPlayerObject(clientId, true);
         prefabNetworkObject.ChangeOwnership(clientId);
+
+        // Set player name
+        var playerComponent = spawnedObject.GetComponent<Player>();
+        if (playerComponent != null && !string.IsNullOrEmpty(JoinManager.playerName.ToString()))
+        {
+            playerComponent.PlayerName.Value = JoinManager.playerName;
+        }
 
         playerPrefabIndex = (playerPrefabIndex + 1) % playerPrefabs.Count;
     }
