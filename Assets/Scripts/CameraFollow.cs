@@ -4,23 +4,23 @@ public class CameraFollow : MonoBehaviour
 {
     [SerializeField] private float smoothSpeed = 0.01f;
 
-    private Transform target;
+    private Transform localPlayer;
 
     void Start()
     {
-        target = FindLocalPlayer();
+        localPlayer = FindLocalPlayer();
     }
 
     void Update()
     {
-        if (target == null)
+        if (localPlayer == null)
         {
-            target = FindLocalPlayer();
+            localPlayer = FindLocalPlayer();
         }
 
-        if (target != null)
+        if (localPlayer != null)
         {
-            Vector3 desiredPosition = target.position;
+            Vector3 desiredPosition = localPlayer.position;
             desiredPosition.z = transform.position.z;
 
             Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
@@ -33,7 +33,7 @@ public class CameraFollow : MonoBehaviour
         var players = FindObjectsOfType<Player>();
         foreach (var player in players)
         {
-            if (player.IsOwner) 
+            if (player.NetworkObject.IsLocalPlayer) 
             {
                 return player.transform;
             }

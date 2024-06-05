@@ -5,17 +5,26 @@ public class ScoreDisplay : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI scoreText;
 
-    private Player player;
+    private Player localPlayer;
 
     void Update()
     {
-        if (player == null)
+        if (localPlayer == null)
         {
-            player = FindObjectOfType<Player>();
+            var players = FindObjectsOfType<Player>();
+            foreach (var player in players)
+            {
+                if (player.NetworkObject.IsLocalPlayer)
+                {
+                    localPlayer = player;
+                    break;
+                }
+            }
         }
-        if (player != null)
+        
+        if (localPlayer != null)
         {
-            scoreText.text = $"Score: {player.GetScore}";
+            scoreText.text = $"Score: {localPlayer.GetScore}";
         }
     }
 }
