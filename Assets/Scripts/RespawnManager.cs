@@ -9,7 +9,7 @@ public class RespawnManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsServer) { return; }
+        if (!IsServer) return;
 
         Player[] players = FindObjectsOfType<Player>();
         foreach (Player player in players)
@@ -23,7 +23,7 @@ public class RespawnManager : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        if (!IsServer) { return; }
+        if (!IsServer) return;
 
         Player.OnPlayerSpawned -= PlayerSpawned;
         Player.OnPlayerDespawned -= PlayerDespawned;
@@ -52,8 +52,7 @@ public class RespawnManager : NetworkBehaviour
 
         Vector3 spawnPosition = FindObjectOfType<SpawnManager>().GetSpawnPosition();
 
-        NetworkObject playerInstance = Instantiate(
-            playerPrefab, new Vector3(0,0,0) , Quaternion.identity);
+        NetworkObject playerInstance = Instantiate(playerPrefab, spawnPosition , Quaternion.identity);
 
         playerInstance.SpawnAsPlayerObject(ownerClientId);
     }

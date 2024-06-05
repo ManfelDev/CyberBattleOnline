@@ -4,6 +4,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private List<Transform> playerSpawnLocations;
+    [SerializeField] private int             spawnDistance = 200;
 
     public Vector3 GetSpawnPosition()
     {
@@ -17,7 +18,7 @@ public class SpawnManager : MonoBehaviour
                 float d = Vector3.Distance(player.transform.position, playerSpawnLocation.position);
                 closestDist = Mathf.Min(closestDist, d);
             }
-            if (closestDist > 20)
+            if (closestDist > spawnDistance)
             {
                 spawnPos = playerSpawnLocation.position;
                 break;
