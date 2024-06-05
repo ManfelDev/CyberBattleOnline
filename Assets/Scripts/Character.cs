@@ -5,23 +5,18 @@ using Unity.Netcode;
 public class Character : NetworkBehaviour
 {
     [Header("References")]
-    [SerializeField] protected GameObject clientLaserPrefab;
-    [SerializeField] protected GameObject serverLaserPrefab;
-    [SerializeField] protected Transform  laserSpawnPoint;
-    [SerializeField] protected Transform  modelTransform;
+    [SerializeField] protected GameObject  clientLaserPrefab;
+    [SerializeField] protected GameObject  serverLaserPrefab;
+    [SerializeField] protected Transform   laserSpawnPoint;
+    [SerializeField] protected Transform   modelTransform;
+    [SerializeField] protected Health      health;
+    [SerializeField] protected Rigidbody2D rigidBody;
 
     [Header("Stats")]
     [SerializeField] protected float      speed = 200;
     [SerializeField] protected float      shotCooldown = 0.5f;
 
-    protected Health      health;
-    protected Rigidbody2D rb;
-
-    public override void OnNetworkSpawn() 
-    {
-        rb = GetComponent<Rigidbody2D>();
-        health = GetComponent<Health>();
-    }
+    public Health Health => health;
 
     public void IncreaseSpeed(float amount)
     {

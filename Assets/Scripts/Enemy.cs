@@ -68,12 +68,12 @@ public class Enemy : Character
         if (distanceToTarget > stopDistance)
         {
             movePosition = Vector3.MoveTowards(transform.position, target.position, speed * Time.fixedDeltaTime);
-            rb.MovePosition(movePosition);
+            rigidBody.MovePosition(movePosition);
         }
         else if (distanceToTarget < retreatDistance)
         {
             movePosition = Vector3.MoveTowards(transform.position, target.position, -speed * Time.fixedDeltaTime);
-            rb.MovePosition(movePosition);
+            rigidBody.MovePosition(movePosition);
         }
 
         if (IsAnyPlayerInViewAndRange())

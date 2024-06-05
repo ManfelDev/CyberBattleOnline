@@ -25,6 +25,11 @@ public class Health : NetworkBehaviour
         ModifyHealth(-damage);
     }
 
+    public void Heal(int amount)
+    {
+        ModifyHealth(amount);
+    }
+
     private void ModifyHealth(int amount)
     {
         if (isDead) return;
@@ -36,11 +41,6 @@ public class Health : NetworkBehaviour
         {
             OnDie?.Invoke(this);
         }
-    }
-
-    public void Respawn()
-    {
-        CurrentHealth.Value = maxHealth;
     }
 
     /*private void Die(GameObject shooter)

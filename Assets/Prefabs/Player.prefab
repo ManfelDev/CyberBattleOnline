@@ -908,9 +908,46 @@ MonoBehaviour:
   serverLaserPrefab: {fileID: 1369348502242646051, guid: d9d8397116007ae4aab7571b7ab88af9, type: 3}
   laserSpawnPoint: {fileID: 8641341619277349726}
   modelTransform: {fileID: 1102717847402243067}
+  health: {fileID: 1062252118408975064}
+  rigidBody: {fileID: 8843166756782639698}
   speed: 200
   shotCooldown: 0.5
   playerNameText: {fileID: 3938835393083158885}
+  PlayerName:
+    m_InternalValue:
+      utf8LengthInBytes: 0
+      bytes:
+        offset0000:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0016: 0
+        byte0017: 0
+        byte0018: 0
+        byte0019: 0
+        byte0020: 0
+        byte0021: 0
+        byte0022: 0
+        byte0023: 0
+        byte0024: 0
+        byte0025: 0
+        byte0026: 0
+        byte0027: 0
+        byte0028: 0
+        byte0029: 0
   Score:
     m_InternalValue: 0
 --- !u!1 &8875374393570493609

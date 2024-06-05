@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using TMPro;
 using Unity.Collections;
+using System;
 
 public class Player : Character
 {
@@ -14,20 +15,31 @@ public class Player : Character
     public NetworkVariable<int> Score = new NetworkVariable<int>();
     public int GetScore => Score.Value;
 
+    public static event Action<Player> OnPlayerSpawned;
+    public static event Action<Player> OnPlayerDespawned;
+
     public override void OnNetworkSpawn()
     {
+        if (IsServer)
+        {
+            OnPlayerSpawned?.Invoke(this);
+        }
+
         SetPlayerName(PlayerName.Value, PlayerName.Value);
         PlayerName.OnValueChanged += SetPlayerName;
 
         if (!IsLocalPlayer) return;
-
-        base.OnNetworkSpawn();
         
         SubmitPlayerNameServerRpc(JoinManager.playerName);
     }
 
-    public override void OnDestroy()
+    public override void OnNetworkDespawn()
     {
+        if (IsServer)
+        {
+            OnPlayerDespawned?.Invoke(this);
+        }
+
         if (!IsLocalPlayer)
 
         PlayerName.OnValueChanged -= SetPlayerName;
@@ -58,7 +70,7 @@ public class Player : Character
         if (!IsLocalPlayer) return;
 
         // Move the player
-        rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
+        rigidBody.MovePosition(rigidBody.position + movement * speed * Time.fixedDeltaTime);
     }
 
     private void LateUpdate()
@@ -76,11 +88,6 @@ public class Player : Character
     public void AddScore(int amount)
     {
         Score.Value += amount;
-    }
-
-    public void Respawn()
-    {
-        health.Respawn();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
