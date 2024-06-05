@@ -1,8 +1,11 @@
 using UnityEngine;
 using Unity.Netcode;
+using TMPro;
 
 public class Player : Character
 {
+    [SerializeField] private TextMeshProUGUI playerNameText;
+
     private Vector2 movement;
     private float   lastShotTime;
 
@@ -114,5 +117,10 @@ public class Player : Character
     {
         GameObject projectileInstance = Instantiate(clientLaserPrefab, spawnPos, Quaternion.identity);
         projectileInstance.transform.up = direction;
+    }
+
+    public void SetPlayerName(string name)
+    {
+        playerNameText.text = name;
     }
 }

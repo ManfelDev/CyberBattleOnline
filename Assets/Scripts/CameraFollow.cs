@@ -33,7 +33,7 @@ public class CameraFollow : MonoBehaviour
         var players = FindObjectsOfType<Player>();
         foreach (var player in players)
         {
-            if (player.NetworkObject.IsLocalPlayer) 
+            if (player.IsLocalPlayer) 
             {
                 return player.transform;
             }

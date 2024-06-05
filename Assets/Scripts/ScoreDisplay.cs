@@ -14,7 +14,7 @@ public class ScoreDisplay : MonoBehaviour
             var players = FindObjectsOfType<Player>();
             foreach (var player in players)
             {
-                if (player.NetworkObject.IsLocalPlayer)
+                if (player.IsLocalPlayer)
                 {
                     localPlayer = player;
                     break;
