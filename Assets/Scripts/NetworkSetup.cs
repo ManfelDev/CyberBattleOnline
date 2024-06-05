@@ -68,7 +68,7 @@ public class NetworkSetup : MonoBehaviour
             }
         }
 
-        // Check if the join code was set in the JoinCodeManager
+        // Check if the join code was set in the JoinManager
         if (string.IsNullOrEmpty(joinCode) && !string.IsNullOrEmpty(JoinManager.joinCode))
         {
             joinCode = JoinManager.joinCode;
@@ -245,23 +245,8 @@ public class NetworkSetup : MonoBehaviour
     {
         Debug.LogError($"Player {clientId} connected, prefab index = {playerPrefabIndex}!");
 
-        // Check a free spot for this player
-        var spawnPos = Vector3.zero;
-        var currentPlayers = FindObjectsOfType<Player>();
-        foreach (var playerSpawnLocation in playerSpawnLocations)
-        {
-            var closestDist = float.MaxValue;
-            foreach (var player in currentPlayers)
-            {
-                float d = Vector3.Distance(player.transform.position, playerSpawnLocation.position);
-                closestDist = Mathf.Min(closestDist, d);
-            }
-            if (closestDist > 20)
-            {
-                spawnPos = playerSpawnLocation.position;
-                break;
-            }
-        }
+        // Get a free spot for this player from the SpawnManager
+        var spawnPos = FindObjectOfType<SpawnManager>().GetSpawnPosition();
 
         // Spawn player object
         var spawnedObject = Instantiate(playerPrefabs[playerPrefabIndex], spawnPos, Quaternion.identity);
@@ -278,6 +263,7 @@ public class NetworkSetup : MonoBehaviour
 
         playerPrefabIndex = (playerPrefabIndex + 1) % playerPrefabs.Count;
     }
+
 
     private void OnClientDisconnected(ulong clientId)
     {
