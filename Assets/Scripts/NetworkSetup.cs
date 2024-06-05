@@ -414,6 +414,57 @@ public class NetworkSetup : MonoBehaviour
 
 #if UNITY_EDITOR
     [MenuItem("Tools/Build Windows (x64)", priority = 0)]
+    public static bool BuildGameServer()
+    {
+        // Specify build options
+        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
+        var enabledScenes = EditorBuildSettings.scenes.Where(s => s.enabled).ToArray();
+
+        if (enabledScenes.Length > 1)
+        {
+            buildPlayerOptions.scenes = new[] { enabledScenes[1].path };
+        }
+        else
+        {
+            Debug.LogError("There are not enough enabled scenes to select index 1.");
+            return false;
+        }
+
+        buildPlayerOptions.locationPathName = Path.Combine("Builds", "CyberBattle.exe");
+        buildPlayerOptions.target = BuildTarget.StandaloneWindows64;
+        buildPlayerOptions.options = BuildOptions.None;
+
+        // Perform the build
+        var report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+
+        // Output the result of the build
+        Debug.Log($"Build ended with status: {report.summary.result}");
+
+        // Check if the build was successful
+        if (report.summary.result == BuildResult.Succeeded)
+        {
+            Debug.Log("Build was successful!");
+        }
+        else if (report.summary.result == BuildResult.Failed)
+        {
+            Debug.Log("Build failed.");
+        }
+        else if (report.summary.result == BuildResult.Cancelled)
+        {
+            Debug.Log("Build was cancelled.");
+        }
+        else if (report.summary.result == BuildResult.Unknown)
+        {
+            Debug.Log("Build result is unknown.");
+        }
+
+        // Additional information about the build can be logged
+        Debug.Log($"Total errors: {report.summary.totalErrors}");
+        Debug.Log($"Total warnings: {report.summary.totalWarnings}");
+
+        return report.summary.result == BuildResult.Succeeded;
+    }
+
     public static bool BuildGame()
     {
         // Specify build options
@@ -458,29 +509,42 @@ public class NetworkSetup : MonoBehaviour
         return report.summary.result == BuildResult.Succeeded;
     }
 
+
     [MenuItem("Tools/Build and Launch (Server)", priority = 10)]
     public static void BuildAndLaunch1()
     {
         CloseAll();
-        if (BuildGame())
+        if (BuildGameServer())
         {
             Launch1();
         }
     }
 
-
-    [MenuItem("Tools/Build and Launch (Server + Client)", priority = 20)]
-    public static void BuildAndLaunch2()
+    [MenuItem("Tools/Build and Launch (Client)", priority = 11)]
+    public static void BuildAndLaunch1_NoServer()
     {
         CloseAll();
         if (BuildGame())
         {
-            Launch2();
+            Launch1_NoServer();
         }
     }
 
-    [MenuItem("Tools/Launch (Server) _F11", priority = 30)]
-    public static void Launch1()
+    [MenuItem("Tools/Build and Launch (Server + Client)", priority = 12)]
+    public static void BuildAndLaunch2()
+    {
+        CloseAll();
+        if (BuildGameServer())
+        {
+            Launch1();
+        }
+        if (BuildGame())
+        {
+            Launch1_NoServer();
+        }
+    }
+
+    private static void Launch1()
     {
         Run("Builds\\CyberBattle.exe", "--server");
     }
@@ -488,14 +552,6 @@ public class NetworkSetup : MonoBehaviour
     [MenuItem("Tools/Launch (Client)", priority = 31)]
     public static void Launch1_NoServer()
     {
-        StartClient();
-    }
-
-
-    [MenuItem("Tools/Launch (Server + Client)", priority = 40)]
-    public static void Launch2()
-    {
-        Run("Builds\\CyberBattle.exe", "--server");
         StartClient();
     }
 

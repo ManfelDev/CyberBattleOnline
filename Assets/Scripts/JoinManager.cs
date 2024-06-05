@@ -11,6 +11,6 @@ public class JoinManager : MonoBehaviour
     public void OnJoinButtonClicked()
     {
         joinCode = inputField.text;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 }
