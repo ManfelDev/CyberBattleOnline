@@ -517,27 +517,6 @@ public class NetworkSetup : MonoBehaviour
         return report.summary.result == BuildResult.Succeeded;
     }
 
-
-    [MenuItem("Tools/Build and Launch (Server)", priority = 10)]
-    public static void BuildAndLaunch1()
-    {
-        CloseAll();
-        if (BuildGameServer())
-        {
-            Launch1();
-        }
-    }
-
-    [MenuItem("Tools/Build and Launch (Client)", priority = 11)]
-    public static void BuildAndLaunch1_NoServer()
-    {
-        CloseAll();
-        if (BuildGame())
-        {
-            Launch1_NoServer();
-        }
-    }
-
     [MenuItem("Tools/Build and Launch (Server + Client)", priority = 12)]
     public static void BuildAndLaunch2()
     {
