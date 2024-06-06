@@ -38,44 +38,21 @@ public class NetworkSetup : MonoBehaviour
         public byte[]   Key;
     }
 
-    [SerializeField] private bool            forceLocalServer = false;
     [SerializeField] private List<Player>    playerPrefabs;
     [SerializeField] private List<Transform> playerSpawnLocations;
     [SerializeField] private int             maxPlayers = 2;
-    [SerializeField] private string          joinCode;
     [SerializeField] private TextMeshProUGUI textJoinCode;
+    [SerializeField] private GameObject      startUI;
+    [SerializeField] private GameObject      serverUI;
+    [SerializeField] private GameObject      joinUI;
 
-    private bool            isServer = false;
     private int             playerPrefabIndex = 0;
     private bool            isRelay;
     private UnityTransport  transport;
     private RelayHostData   relayData;
 
-    void Start()
+    public void OnClickServer()
     {
-        // Parse command line arguments
-        string[] args = System.Environment.GetCommandLineArgs();
-        for (int i = 0; i < args.Length; i++)
-        {
-            if (args[i] == "--server")
-            {
-                // --server found, this should be a server application
-                isServer = true;
-            }
-            else if (args[i] == "--code")
-            {
-                joinCode = ((i + 1) < args.Length) ? (args[i + 1]) : ("");
-            }
-        }
-
-        // Check if the join code was set in the JoinManager
-        if (string.IsNullOrEmpty(joinCode) && !string.IsNullOrEmpty(JoinManager.joinCode))
-        {
-            joinCode = JoinManager.joinCode;
-        }
-
-        if (forceLocalServer) isServer = true;
-
         transport = GetComponent<UnityTransport>();
         if (transport.Protocol == UnityTransport.ProtocolType.RelayUnityTransport)
         {
@@ -86,10 +63,25 @@ public class NetworkSetup : MonoBehaviour
             textJoinCode.gameObject.SetActive(false);
         }
 
-        if (isServer)
-            StartCoroutine(StartAsServerCR());
+        startUI.SetActive(false);
+        serverUI.SetActive(true);
+        StartCoroutine(StartAsServerCR());
+    }
+
+    public void OnClickClient()
+    {
+        transport = GetComponent<UnityTransport>();
+        if (transport.Protocol == UnityTransport.ProtocolType.RelayUnityTransport)
+        {
+            isRelay = true;
+        }
         else
-            StartCoroutine(StartAsClientCR());
+        {
+            textJoinCode.gameObject.SetActive(false);
+        }
+
+        startUI.SetActive(false);
+        joinUI.SetActive(true);
     }
     
     IEnumerator StartAsServerCR()
@@ -174,7 +166,7 @@ public class NetworkSetup : MonoBehaviour
 
                     if (textJoinCode != null)
                     {
-                        textJoinCode.text = $"JoinCode:{relayData.JoinCode}";
+                        textJoinCode.text = $"Join Code: {relayData.JoinCode}";
                         textJoinCode.gameObject.SetActive(true);
                     }
 
@@ -270,7 +262,7 @@ public class NetworkSetup : MonoBehaviour
         Debug.Log($"Player {clientId} disconnected!");
     }
 
-    IEnumerator StartAsClientCR()
+    public IEnumerator StartAsClientCR()
     {
         SetWindowTitle("CyberBattle (client mode)");
 
@@ -296,7 +288,7 @@ public class NetworkSetup : MonoBehaviour
             Debug.Log("Login successfull!");
 
             //Ask Unity Services for allocation data based on a join code
-            var joinAllocationTask = JoinAllocationAsync(joinCode);
+            var joinAllocationTask = JoinAllocationAsync(JoinManager.joinCode);
 
             yield return new WaitUntil(() => joinAllocationTask.IsCompleted);
 
@@ -408,57 +400,6 @@ public class NetworkSetup : MonoBehaviour
 
 #if UNITY_EDITOR
     [MenuItem("Tools/Build Windows (x64)", priority = 0)]
-    public static bool BuildGameServer()
-    {
-        // Specify build options
-        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-        var enabledScenes = EditorBuildSettings.scenes.Where(s => s.enabled).ToArray();
-
-        if (enabledScenes.Length > 1)
-        {
-            buildPlayerOptions.scenes = new[] { enabledScenes[1].path };
-        }
-        else
-        {
-            Debug.LogError("There are not enough enabled scenes to select index 1.");
-            return false;
-        }
-
-        buildPlayerOptions.locationPathName = Path.Combine("Builds", "CyberBattle.exe");
-        buildPlayerOptions.target = BuildTarget.StandaloneWindows64;
-        buildPlayerOptions.options = BuildOptions.None;
-
-        // Perform the build
-        var report = BuildPipeline.BuildPlayer(buildPlayerOptions);
-
-        // Output the result of the build
-        Debug.Log($"Build ended with status: {report.summary.result}");
-
-        // Check if the build was successful
-        if (report.summary.result == BuildResult.Succeeded)
-        {
-            Debug.Log("Build was successful!");
-        }
-        else if (report.summary.result == BuildResult.Failed)
-        {
-            Debug.Log("Build failed.");
-        }
-        else if (report.summary.result == BuildResult.Cancelled)
-        {
-            Debug.Log("Build was cancelled.");
-        }
-        else if (report.summary.result == BuildResult.Unknown)
-        {
-            Debug.Log("Build result is unknown.");
-        }
-
-        // Additional information about the build can be logged
-        Debug.Log($"Total errors: {report.summary.totalErrors}");
-        Debug.Log($"Total warnings: {report.summary.totalWarnings}");
-
-        return report.summary.result == BuildResult.Succeeded;
-    }
-
     public static bool BuildGame()
     {
         // Specify build options
@@ -503,60 +444,20 @@ public class NetworkSetup : MonoBehaviour
         return report.summary.result == BuildResult.Succeeded;
     }
 
-    [MenuItem("Tools/Build and Launch (Server + Client)", priority = 12)]
+    [MenuItem("Tools/Build and Launch", priority = 10)]
     public static void BuildAndLaunch2()
     {
         CloseAll();
-        if (BuildGameServer())
-        {
-            Launch1();
-        }
         if (BuildGame())
         {
-            Launch1_NoServer();
+            Launch();
         }
     }
 
-    private static void Launch1()
+    [MenuItem("Tools/Launch", priority = 11)]
+    private static void Launch()
     {
-        Run("Builds\\CyberBattle.exe", "--server");
-    }
-
-    [MenuItem("Tools/Launch (Client)", priority = 31)]
-    public static void Launch1_NoServer()
-    {
-        StartClient();
-    }
-
-    static void StartClient()
-    {
-#if UNITY_EDITOR
-        if (UnityEditor.EditorApplication.isPlaying)
-        {
-            NetworkSetup networkSetup = FindObjectOfType<NetworkSetup>();
-            if (networkSetup)
-            {
-                if ((networkSetup.isRelay) && (networkSetup.isServer) && (networkSetup.relayData != null))
-                {
-                    Run("Builds\\CyberBattle.exe", $"--code {networkSetup.relayData.JoinCode}");
-                }
-                else
-                {
-                    Run("Builds\\CyberBattle.exe", "");
-                }
-            }
-            else
-            {
-                Run("Builds\\CyberBattle.exe", "");
-            }
-        }
-        else
-        {
-            Run("Builds\\CyberBattle.exe", "");
-        }
-#else
-        Run("Builds\\CyberBattle.exe", "");
-#endif
+        Run ("Builds\\CyberBattle.exe", "");
     }
 
     [MenuItem("Tools/Close All", priority = 100)]

@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Cyber Battle.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/JoinScene.unity
     guid: 1d650ae311585cc4c826191f7dfa816a
   - enabled: 1
