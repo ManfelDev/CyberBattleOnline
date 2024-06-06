@@ -43,6 +43,7 @@ public class NetworkSetup : MonoBehaviour
     [SerializeField] private int             maxPlayers = 2;
     [SerializeField] private TextMeshProUGUI textJoinCode;
     [SerializeField] private TextMeshProUGUI loadingText;
+    [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private GameObject      startUI;
     [SerializeField] private GameObject      serverUI;
     [SerializeField] private GameObject      joinUI;
@@ -287,10 +288,11 @@ public class NetworkSetup : MonoBehaviour
             {
                 Debug.LogError("Login failed: " + loginTask.Exception);
                 loadingText.gameObject.SetActive(false);
+                ResetToStart();
                 yield break;
             }
 
-            Debug.Log("Login successfull!");
+            Debug.Log("Login successful!");
 
             //Ask Unity Services for allocation data based on a join code
             var joinAllocationTask = JoinAllocationAsync(JoinManager.joinCode);
@@ -301,6 +303,7 @@ public class NetworkSetup : MonoBehaviour
             {
                 Debug.LogError("Join allocation failed: " + joinAllocationTask.Exception);
                 loadingText.gameObject.SetActive(false);
+                ResetToStart();
                 yield break;
             }
             else
@@ -326,8 +329,8 @@ public class NetworkSetup : MonoBehaviour
                 relayData.Key = allocation.Key;
 
                 transport.SetRelayServerData(relayData.IPv4Address, relayData.Port, 
-                                             relayData.AllocationIDBytes, relayData.Key, relayData.ConnectionData, 
-                                             relayData.HostConnectionData);
+                                            relayData.AllocationIDBytes, relayData.Key, relayData.ConnectionData, 
+                                            relayData.HostConnectionData);
             }
         }
 
@@ -335,13 +338,22 @@ public class NetworkSetup : MonoBehaviour
         {
             Debug.Log($"Connecting on port {transport.ConnectionData.Port}...");
             loadingText.gameObject.SetActive(false);
+            scoreText.gameObject.SetActive(true);
         }
         else
         {
             Debug.LogError($"Failed to connect on port {transport.ConnectionData.Port}...");
             loadingText.gameObject.SetActive(false);
+            ResetToStart();
         }
     }
+
+    private void ResetToStart()
+    {
+        startUI.SetActive(true);
+        joinUI.SetActive(false);
+    }
+
 
     private async Task<JoinAllocation> JoinAllocationAsync(string joinCode)
     {

@@ -7,7 +7,6 @@ public class JoinManager : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldJoinCode;
     [SerializeField] private TMP_InputField inputFieldPlayerName;
     [SerializeField] private GameObject     joinUI;
-    [SerializeField] private GameObject     gameUI;
     [SerializeField] private NetworkSetup   networkSetup;
 
     public static string             joinCode;
@@ -21,6 +20,5 @@ public class JoinManager : MonoBehaviour
         StartCoroutine(networkSetup.StartAsClientCR());
 
         joinUI.SetActive(false);
-        gameUI.SetActive(true);
     }
 }

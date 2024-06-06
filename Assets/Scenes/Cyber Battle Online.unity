@@ -186,7 +186,6 @@ MonoBehaviour:
   inputFieldJoinCode: {fileID: 1125225522}
   inputFieldPlayerName: {fileID: 549660495}
   joinUI: {fileID: 664322151}
-  gameUI: {fileID: 812470624}
   networkSetup: {fileID: 645049270}
 --- !u!4 &168844045
 Transform:
@@ -1746,6 +1745,7 @@ MonoBehaviour:
   maxPlayers: 5
   textJoinCode: {fileID: 271329482}
   loadingText: {fileID: 1072752489}
+  scoreText: {fileID: 2009478632}
   startUI: {fileID: 626254926}
   serverUI: {fileID: 407847395}
   joinUI: {fileID: 664322151}
@@ -1872,7 +1872,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &812470625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6742,7 +6742,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1072752488
 RectTransform:
   m_ObjectHideFlags: 0
@@ -26988,7 +26988,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2009478632
 MonoBehaviour:
   m_ObjectHideFlags: 0
