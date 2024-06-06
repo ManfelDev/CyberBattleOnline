@@ -42,6 +42,7 @@ public class NetworkSetup : MonoBehaviour
     [SerializeField] private List<Transform> playerSpawnLocations;
     [SerializeField] private int             maxPlayers = 2;
     [SerializeField] private TextMeshProUGUI textJoinCode;
+    [SerializeField] private TextMeshProUGUI loadingText;
     [SerializeField] private GameObject      startUI;
     [SerializeField] private GameObject      serverUI;
     [SerializeField] private GameObject      joinUI;
@@ -266,6 +267,9 @@ public class NetworkSetup : MonoBehaviour
     {
         SetWindowTitle("CyberBattle (client mode)");
 
+        loadingText.text = "Loading...";
+        loadingText.gameObject.SetActive(true);
+
         var networkManager = GetComponent<NetworkManager>();
         networkManager.enabled = true;
         transport.enabled = true;
@@ -282,6 +286,7 @@ public class NetworkSetup : MonoBehaviour
             if (loginTask.Exception != null)
             {
                 Debug.LogError("Login failed: " + loginTask.Exception);
+                loadingText.gameObject.SetActive(false);
                 yield break;
             }
 
@@ -295,6 +300,7 @@ public class NetworkSetup : MonoBehaviour
             if (joinAllocationTask.Exception != null)
             {
                 Debug.LogError("Join allocation failed: " + joinAllocationTask.Exception);
+                loadingText.gameObject.SetActive(false);
                 yield break;
             }
             else
@@ -328,10 +334,12 @@ public class NetworkSetup : MonoBehaviour
         if (networkManager.StartClient())
         {
             Debug.Log($"Connecting on port {transport.ConnectionData.Port}...");
+            loadingText.gameObject.SetActive(false);
         }
         else
         {
             Debug.LogError($"Failed to connect on port {transport.ConnectionData.Port}...");
+            loadingText.gameObject.SetActive(false);
         }
     }
 
