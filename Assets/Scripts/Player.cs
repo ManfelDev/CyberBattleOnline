@@ -17,6 +17,7 @@ public class Player : Character
 
     public static event Action<Player> OnPlayerSpawned;
     public static event Action<Player> OnPlayerDespawned;
+    public static event Action<ulong, FixedString32Bytes> OnPlayerNameChanged;
 
     public override void OnNetworkSpawn()
     {
@@ -45,6 +46,20 @@ public class Player : Character
     private void SubmitPlayerNameServerRpc(string name, ServerRpcParams rpcParams = default)
     {
         playerName = name;
+        UpdatePlayerNameClientRpc(OwnerClientId, name);
+        OnPlayerNameChanged?.Invoke(OwnerClientId, playerName);
+    }
+
+    [ClientRpc]
+    private void UpdatePlayerNameClientRpc(ulong clientId, string name)
+    {
+        if (OwnerClientId == clientId)
+        {
+            playerName = name;
+            playerNameText.text = playerName.Value;
+        }
+
+        OnPlayerNameChanged?.Invoke(clientId, name);
     }
 
     private void Update()

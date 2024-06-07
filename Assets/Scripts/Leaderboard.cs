@@ -2,16 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using Unity.Collections;
 
 public class Leaderboard : NetworkBehaviour
 {
-    [SerializeField] private Transform                  leaderboardEntitiesHolder;
-    [SerializeField] private LeaderBoardEntityDisplay   leaderboardEntityPrefab;
+    [SerializeField] private Transform leaderboardEntitiesHolder;
+    [SerializeField] private LeaderBoardEntityDisplay leaderboardEntityPrefab;
 
     private NetworkList<LeaderboardEntityState> leaderboardEntities;
     private List<LeaderBoardEntityDisplay> leaderboardEntityDisplays = new List<LeaderBoardEntityDisplay>();
 
-    private void Awake() 
+    private void Awake()
     {
         leaderboardEntities = new NetworkList<LeaderboardEntityState>();
     }
@@ -42,6 +43,7 @@ public class Leaderboard : NetworkBehaviour
 
             Player.OnPlayerSpawned += PlayerSpawned;
             Player.OnPlayerDespawned += PlayerDespawned;
+            Player.OnPlayerNameChanged += UpdatePlayerName;
         }
     }
 
@@ -56,6 +58,7 @@ public class Leaderboard : NetworkBehaviour
         {
             Player.OnPlayerDespawned -= PlayerDespawned;
             Player.OnPlayerSpawned -= PlayerSpawned;
+            Player.OnPlayerNameChanged -= UpdatePlayerName;
         }
     }
 
@@ -92,12 +95,15 @@ public class Leaderboard : NetworkBehaviour
 
     private void PlayerSpawned(Player player)
     {
-        leaderboardEntities.Add(new LeaderboardEntityState
+        var entityState = new LeaderboardEntityState
         {
             ClientID = player.OwnerClientId,
             PlayerName = player.playerName,
             Score = 0
-        });
+        };
+
+        leaderboardEntities.Add(entityState);
+        UpdatePlayerName(player.OwnerClientId, player.playerName);
     }
 
     private void PlayerDespawned(Player player)
@@ -111,6 +117,33 @@ public class Leaderboard : NetworkBehaviour
                 leaderboardEntities.Remove(entity);
                 break;
             }
+        }
+    }
+
+    private void UpdatePlayerName(ulong clientId, FixedString32Bytes playerName)
+    {
+        for (int i = 0; i < leaderboardEntities.Count; i++)
+        {
+            if (leaderboardEntities[i].ClientID == clientId)
+            {
+                var updatedEntity = leaderboardEntities[i];
+                updatedEntity.PlayerName = playerName;
+                leaderboardEntities[i] = updatedEntity;
+
+                // Notify clients of the name change
+                UpdatePlayerNameClientRpc(clientId, playerName);
+                break;
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void UpdatePlayerNameClientRpc(ulong clientId, FixedString32Bytes playerName)
+    {
+        var display = leaderboardEntityDisplays.FirstOrDefault(entity => entity.ClientID == clientId);
+        if (display != null)
+        {
+            display.Initialize(clientId, playerName, display.Score);
         }
     }
 }
