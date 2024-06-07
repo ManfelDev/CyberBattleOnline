@@ -3,12 +3,14 @@ using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using Unity.Collections;
+using UnityEngine.UI;
 
 public class Leaderboard : NetworkBehaviour
 {
-    [SerializeField] private Transform                leaderboardEntitiesHolder;
-    [SerializeField] private LeaderBoardEntityDisplay leaderboardEntityPrefab;
-    [SerializeField] private int                      maxEntities = 5;
+    [SerializeField] private Transform                  leaderboardEntitiesHolder;
+    [SerializeField] private LeaderBoardEntityDisplay   leaderboardEntityPrefab;
+    [SerializeField] private Image                      leaderboardBackground;
+    [SerializeField] private int                        maxEntities = 5;
 
     private NetworkList<LeaderboardEntityState> leaderboardEntities;
     private List<LeaderBoardEntityDisplay> leaderboardEntityDisplays = new List<LeaderBoardEntityDisplay>();
@@ -32,6 +34,8 @@ public class Leaderboard : NetworkBehaviour
                     Value = entity
                 });
             }
+
+            leaderboardBackground.enabled = true;
         }
 
         if (IsServer)
@@ -53,6 +57,8 @@ public class Leaderboard : NetworkBehaviour
         if (IsClient)
         {
             leaderboardEntities.OnListChanged -= OnLeaderboardEntitiesChanged;
+
+            leaderboardBackground.enabled = false;
         }
 
         if (IsServer)

@@ -12,7 +12,6 @@ using Unity.Services.Relay.Models;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
-using Unity.Collections;
 
 using Debug = UnityEngine.Debug;
 #if UNITY_STANDALONE_WIN
@@ -38,15 +37,15 @@ public class NetworkSetup : MonoBehaviour
         public byte[]   Key;
     }
 
-    [SerializeField] private List<Player>    playerPrefabs;
-    [SerializeField] private List<Transform> playerSpawnLocations;
-    [SerializeField] private int             maxPlayers = 2;
-    [SerializeField] private TextMeshProUGUI textJoinCode;
-    [SerializeField] private TextMeshProUGUI loadingText;
-    [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private GameObject      startUI;
-    [SerializeField] private GameObject      serverUI;
-    [SerializeField] private GameObject      joinUI;
+    [SerializeField] private List<Player>       playerPrefabs;
+    [SerializeField] private List<Transform>    playerSpawnLocations;
+    [SerializeField] private int                maxPlayers = 10;
+    [SerializeField] private TextMeshProUGUI    textJoinCode;
+    [SerializeField] private TextMeshProUGUI    loadingText;
+    [SerializeField] private TextMeshProUGUI    scoreText;
+    [SerializeField] private GameObject         startUI;
+    [SerializeField] private GameObject         serverUI;
+    [SerializeField] private GameObject         joinUI;
 
     private int             playerPrefabIndex = 0;
     private bool            isRelay;
