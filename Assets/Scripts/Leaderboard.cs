@@ -102,6 +102,8 @@ public class Leaderboard : NetworkBehaviour
             Score = 0
         };
 
+        player.Score.OnValueChanged += (oldScore, newScore) => OnScoreChange(player.OwnerClientId, newScore);
+
         leaderboardEntities.Add(entityState);
         UpdatePlayerName(player.OwnerClientId, player.playerName.Value);
     }
@@ -118,6 +120,8 @@ public class Leaderboard : NetworkBehaviour
                 break;
             }
         }
+
+        player.Score.OnValueChanged -= (oldScore, newScore) => OnScoreChange(player.OwnerClientId, newScore);
     }
 
     private void UpdatePlayerName(ulong clientId, FixedString32Bytes playerName)
@@ -144,6 +148,21 @@ public class Leaderboard : NetworkBehaviour
         if (display != null)
         {
             display.Initialize(clientId, playerName, display.Score);
+        }
+    }
+
+    private void OnScoreChange(ulong clientId, int newScore)
+    {
+        for (int i = 0; i < leaderboardEntities.Count; i++)
+        {
+            if (leaderboardEntities[i].ClientID != clientId) { continue; }
+
+            leaderboardEntities[i] = new LeaderboardEntityState
+            {
+                ClientID = leaderboardEntities[i].ClientID,
+                PlayerName = leaderboardEntities[i].PlayerName,
+                Score = newScore
+            };
         }
     }
 }
