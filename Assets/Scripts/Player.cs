@@ -9,10 +9,11 @@ public class Player : Character
     [SerializeField] private TextMeshProUGUI playerNameText;
 
     private Vector2 movement;
-    private float lastShotTime;
+    private float   lastShotTime;
 
-    public FixedString32Bytes playerName;
+    public FixedString32Bytes   playerName;
     public NetworkVariable<int> Score = new NetworkVariable<int>();
+    
     public int GetScore => Score.Value;
 
     public static event Action<Player> OnPlayerSpawned;
@@ -30,7 +31,6 @@ public class Player : Character
         {
             playerName = JoinManager.playerName;
             playerNameText.text = playerName.Value;
-            Debug.Log($"Client setting player name to: {playerName.Value}");
             SubmitPlayerNameServerRpc(playerName.Value);
             RequestAllPlayerNamesServerRpc();
         }
