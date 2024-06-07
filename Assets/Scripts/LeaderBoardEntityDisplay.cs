@@ -1,18 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using Unity.Collections;
 
 public class LeaderBoardEntityDisplay : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private TextMeshProUGUI playerNameText;
+
+    private ulong               clientID;
+    private FixedString32Bytes  playerName;
+    private int                 score;
+
+    public ulong    ClientID { get; private set; }
+    public int      Score { get; private set;}
+    
+    public void Initialize(ulong clientID, FixedString32Bytes playerName, int score)
     {
-        
+        ClientID = clientID;
+        this.playerName = playerName;
+
+        UpdateScore(score);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void UpdateName()
     {
-        
+        playerNameText.text = $"1. {playerName} - {score}";
+    }
+
+    public void UpdateScore(int newScore)
+    {
+        score = newScore;
+        UpdateName();
     }
 }

@@ -10,8 +10,8 @@ public class Player : Character
 
     private Vector2 movement;
     private float lastShotTime;
-    public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
 
+    public FixedString32Bytes playerName;
     public NetworkVariable<int> Score = new NetworkVariable<int>();
     public int GetScore => Score.Value;
 
@@ -25,12 +25,12 @@ public class Player : Character
             OnPlayerSpawned?.Invoke(this);
         }
 
-        SetPlayerName(PlayerName.Value, PlayerName.Value);
-        PlayerName.OnValueChanged += SetPlayerName;
-
-        if (!IsLocalPlayer) return;
-        
-        SubmitPlayerNameServerRpc(JoinManager.playerName);
+        if (IsLocalPlayer)
+        {
+            playerName = JoinManager.playerName;
+            SubmitPlayerNameServerRpc(playerName.Value);
+            playerNameText.text = playerName.Value;
+        }
     }
 
     public override void OnNetworkDespawn()
@@ -39,19 +39,15 @@ public class Player : Character
         {
             OnPlayerDespawned?.Invoke(this);
         }
-
-        if (!IsLocalPlayer)
-
-        PlayerName.OnValueChanged -= SetPlayerName;
     }
 
     [ServerRpc]
-    private void SubmitPlayerNameServerRpc(FixedString32Bytes name, ServerRpcParams rpcParams = default)
+    private void SubmitPlayerNameServerRpc(string name, ServerRpcParams rpcParams = default)
     {
-        PlayerName.Value = name;
+        playerName = name;
     }
 
-    void Update()
+    private void Update()
     {
         if (!IsLocalPlayer) return;
 
@@ -143,10 +139,5 @@ public class Player : Character
     {
         GameObject projectileInstance = Instantiate(clientLaserPrefab, spawnPos, Quaternion.identity);
         projectileInstance.transform.up = direction;
-    }
-
-    private void SetPlayerName(FixedString32Bytes oldName, FixedString32Bytes newName)
-    {
-        playerNameText.text = newName.ToString();
     }
 }

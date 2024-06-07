@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ public class Leaderboard : NetworkBehaviour
     [SerializeField] private LeaderBoardEntityDisplay   leaderboardEntityPrefab;
 
     private NetworkList<LeaderboardEntityState> leaderboardEntities;
+    private List<LeaderBoardEntityDisplay> leaderboardEntityDisplays = new List<LeaderBoardEntityDisplay>();
 
     private void Awake() 
     {
@@ -61,7 +64,28 @@ public class Leaderboard : NetworkBehaviour
         switch (changeEvent.Type)
         {
             case NetworkListEvent<LeaderboardEntityState>.EventType.Add:
-                Instantiate(leaderboardEntityPrefab, leaderboardEntitiesHolder);
+                if (!leaderboardEntityDisplays.Any(entity => entity.ClientID == changeEvent.Value.ClientID))
+                {
+                    LeaderBoardEntityDisplay leaderBoardEntity = Instantiate(leaderboardEntityPrefab, leaderboardEntitiesHolder);
+                    leaderBoardEntity.Initialize(changeEvent.Value.ClientID, changeEvent.Value.PlayerName, changeEvent.Value.Score);
+                    leaderboardEntityDisplays.Add(leaderBoardEntity);
+                }
+                break;
+            case NetworkListEvent<LeaderboardEntityState>.EventType.Remove:
+                LeaderBoardEntityDisplay leaderBoardEntityDisplayToRemove = leaderboardEntityDisplays.FirstOrDefault(entity => entity.ClientID == changeEvent.Value.ClientID);
+                if (leaderBoardEntityDisplayToRemove != null)
+                {
+                    leaderBoardEntityDisplayToRemove.transform.SetParent(null);
+                    Destroy(leaderBoardEntityDisplayToRemove.gameObject);
+                    leaderboardEntityDisplays.Remove(leaderBoardEntityDisplayToRemove);
+                }
+                break;
+            case NetworkListEvent<LeaderboardEntityState>.EventType.Value:
+                LeaderBoardEntityDisplay leaderBoardEntityDisplayToUpdate = leaderboardEntityDisplays.FirstOrDefault(entity => entity.ClientID == changeEvent.Value.ClientID);
+                if (leaderBoardEntityDisplayToUpdate != null)
+                {
+                    leaderBoardEntityDisplayToUpdate.UpdateScore(changeEvent.Value.Score);
+                }
                 break;
         }
     }
@@ -71,7 +95,7 @@ public class Leaderboard : NetworkBehaviour
         leaderboardEntities.Add(new LeaderboardEntityState
         {
             ClientID = player.OwnerClientId,
-            PlayerName = player.PlayerName.Value,
+            PlayerName = player.playerName,
             Score = 0
         });
     }

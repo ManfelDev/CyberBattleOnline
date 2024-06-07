@@ -248,13 +248,6 @@ public class NetworkSetup : MonoBehaviour
         prefabNetworkObject.SpawnAsPlayerObject(clientId, true);
         prefabNetworkObject.ChangeOwnership(clientId);
 
-        // Set player name
-        var playerComponent = spawnedObject.GetComponent<Player>();
-        if (playerComponent != null && !string.IsNullOrEmpty(JoinManager.playerName.ToString()))
-        {
-            playerComponent.PlayerName.Value = JoinManager.playerName;
-        }
-
         playerPrefabIndex = (playerPrefabIndex + 1) % playerPrefabs.Count;
     }
 
