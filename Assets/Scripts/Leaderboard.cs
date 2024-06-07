@@ -6,8 +6,9 @@ using Unity.Collections;
 
 public class Leaderboard : NetworkBehaviour
 {
-    [SerializeField] private Transform leaderboardEntitiesHolder;
+    [SerializeField] private Transform                leaderboardEntitiesHolder;
     [SerializeField] private LeaderBoardEntityDisplay leaderboardEntityPrefab;
+    [SerializeField] private int                      maxEntities = 5;
 
     private NetworkList<LeaderboardEntityState> leaderboardEntities;
     private List<LeaderBoardEntityDisplay> leaderboardEntityDisplays = new List<LeaderBoardEntityDisplay>();
@@ -90,6 +91,18 @@ public class Leaderboard : NetworkBehaviour
                     leaderBoardEntityDisplayToUpdate.UpdateScore(changeEvent.Value.Score);
                 }
                 break;
+        }
+
+        leaderboardEntityDisplays.Sort((a, b) => b.Score.CompareTo(a.Score));
+
+        for (int i = 0; i < leaderboardEntityDisplays.Count; i++)
+        {
+            leaderboardEntityDisplays[i].transform.SetSiblingIndex(i);
+            leaderboardEntityDisplays[i].UpdateName();
+
+            bool show = i <= maxEntities -1;
+
+            leaderboardEntityDisplays[i].gameObject.SetActive(show);
         }
     }
 

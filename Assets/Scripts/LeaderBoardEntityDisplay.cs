@@ -1,14 +1,14 @@
 using UnityEngine;
 using TMPro;
 using Unity.Collections;
+using Unity.Netcode;
 
 public class LeaderBoardEntityDisplay : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI playerNameText;
+    [SerializeField] private TextMeshProUGUI    playerNameText;
+    [SerializeField] private Color              playerColor;
 
-    private ulong               clientID;
     private FixedString32Bytes  playerName;
-    private int                 score;
 
     public ulong    ClientID { get; private set; }
     public int      Score { get; private set;}
@@ -18,17 +18,22 @@ public class LeaderBoardEntityDisplay : MonoBehaviour
         ClientID = clientID;
         this.playerName = playerName;
 
+        if (clientID == NetworkManager.Singleton.LocalClientId)
+        {
+            playerNameText.color = playerColor;
+        }
+
         UpdateScore(score);
     }
 
-    private void UpdateName()
+    public void UpdateName()
     {
-        playerNameText.text = $"1. {playerName} - {score}";
+        playerNameText.text = $"{transform.GetSiblingIndex() + 1}. {playerName} - {Score}";
     }
 
     public void UpdateScore(int newScore)
     {
-        score = newScore;
+        Score = newScore;
         UpdateName();
     }
 }
