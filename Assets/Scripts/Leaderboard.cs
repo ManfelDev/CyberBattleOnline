@@ -98,12 +98,12 @@ public class Leaderboard : NetworkBehaviour
         var entityState = new LeaderboardEntityState
         {
             ClientID = player.OwnerClientId,
-            PlayerName = player.playerName,
+            PlayerName = player.playerName.Value,
             Score = 0
         };
 
         leaderboardEntities.Add(entityState);
-        UpdatePlayerName(player.OwnerClientId, player.playerName);
+        UpdatePlayerName(player.OwnerClientId, player.playerName.Value);
     }
 
     private void PlayerDespawned(Player player)

@@ -29,8 +29,10 @@ public class Player : Character
         if (IsLocalPlayer)
         {
             playerName = JoinManager.playerName;
-            SubmitPlayerNameServerRpc(playerName.Value);
             playerNameText.text = playerName.Value;
+            Debug.Log($"Client setting player name to: {playerName.Value}");
+            SubmitPlayerNameServerRpc(playerName.Value);
+            RequestAllPlayerNamesServerRpc();
         }
     }
 
@@ -43,23 +45,44 @@ public class Player : Character
     }
 
     [ServerRpc]
-    private void SubmitPlayerNameServerRpc(string name, ServerRpcParams rpcParams = default)
+    private void SubmitPlayerNameServerRpc(string name)
     {
         playerName = name;
-        UpdatePlayerNameClientRpc(OwnerClientId, name);
+        UpdatePlayerNameClientRpc(name);
         OnPlayerNameChanged?.Invoke(OwnerClientId, playerName);
     }
 
     [ClientRpc]
-    private void UpdatePlayerNameClientRpc(ulong clientId, string name)
+    private void UpdatePlayerNameClientRpc(string name)
     {
-        if (OwnerClientId == clientId)
-        {
-            playerName = name;
-            playerNameText.text = playerName.Value;
-        }
+        playerName = name;
+        playerNameText.text = playerName.Value;
+        OnPlayerNameChanged?.Invoke(OwnerClientId, playerName);
+    }
 
-        OnPlayerNameChanged?.Invoke(clientId, name);
+    [ServerRpc]
+    private void RequestAllPlayerNamesServerRpc(ServerRpcParams rpcParams = default)
+    {
+        foreach (var player in FindObjectsOfType<Player>())
+        {
+            UpdatePlayerNameClientRpc(player.playerName.Value, player.OwnerClientId);
+        }
+    }
+
+    [ClientRpc]
+    private void UpdatePlayerNameClientRpc(string name, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId != clientId)
+        {
+            foreach (var player in FindObjectsOfType<Player>())
+            {
+                if (player.OwnerClientId == clientId)
+                {
+                    player.playerName = name;
+                    player.playerNameText.text = name;
+                }
+            }
+        }
     }
 
     private void Update()
