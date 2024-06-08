@@ -107,3 +107,13 @@ The ```ClientRpc``` method ```UpdatePlayerNameClientRpc()``` ensures that player
 The leaderboard UI is managed by the ```LeaderBoardEntityDisplay``` script, which visually updates the players' positions and scores. The leaderboard is sorted by score, from highest to lowest, ensuring that the players with the best scores appear at the top. Additionally, the local player's name is displayed in a different color to highlight their position if they are on the leaderboard.
 
 ![Leaderboard](./Images/leaderboard.png)
+
+## Bonus Score
+
+To implement the bonus scores, the server controls the creation and management of these bonuses. The bonuses are network objects (```NetworkObject```) instantiated by the server in random positions within a defined area (```spawnArea```) in the ```OnNetworkSpawn()``` method. These positions are checked to avoid unwanted areas (```avoidLayers```). The score for each bonus is set using the ```SetScore()``` method.
+
+When a player attempts to collect a bonus, the ```Pick()``` method is called. This method checks on the server whether the bonus has already been collected. To avoid lag effects, the bonus immediately disappears on the client side. The server then validates the collection: if the bonus was successfully collected, the server updates the player's score and sends the confirmation back to the client; if not, the server informs the client that the collection failed, and the bonus respawns.
+
+The bonus collection is protected to ensure that two players do not collect the same bonus simultaneously. The server is the final authority that determines who collects the bonus first. When a bonus is collected, the ```OnPicked``` event is triggered, activating the ```OnBonusScorePicked()``` method on the server. This method repositions the bonus to a new random location and prepares it to be collected again by calling the ```Respawn()``` method, synchronizing these changes with all connected clients.
+
+![Bonus Score](./Images/bonus_score.png)
