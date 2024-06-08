@@ -1,4 +1,4 @@
-# Cyber battle Online
+# Cyber Battle Online
 
 ## Author
 
@@ -6,7 +6,7 @@ Rafael José, a22202078
 
 ## Description
 
-Cyber Battle is a top-down shooter game where the objective for players is to achieve the highest score possible within the time limit. It is a multiplayer game that uses Unity Networking (NGO) to synchronize player actions. Players compete against each other, collecting score-giving points scattered across the map, while the network ensures all interactions are recorded and reflected in real-time for all participants. When a player is eliminated, their points are reset.
+Cyber Battle is a top-down shooter game, with laser guns, where the objective for players is to achieve the highest score possible within the time limit. It is a multiplayer game that uses Unity Networking (NGO) to synchronize player actions. Players compete against each other, collecting score-giving points scattered across the map, while the network ensures all interactions are recorded and reflected in real-time for all participants. When a player is eliminated, their points are reset.
 
 ![Gameplay](./Images/gameplay.png)
 
@@ -57,6 +57,16 @@ The score UI is updated through the ```ScoreDisplay``` script, which periodicall
 
 ### Respawn/despawn
 
-For the respawn and despawn of players, I used a respawn management system that ensures players are recreated after dying. The ```RespawnManager``` script is responsible for managing these events. When a player is instantiated on the network (```OnNetworkSpawn()```), the script checks if it is the server and, if so, subscribes to the player spawn and despawn events. The ```OnPlayerSpawned``` event is used to associate each player's death event (```OnDie```) with a method that handles respawning. When a player dies, the ```PlayerDie(Player player)``` method is called, which destroys the player object and starts a coroutine (```RespawnPlayer```) to recreate the player after a defined wait time (```respawnDelay```).
+For the respawn and despawn of players, I used a respawn management system that ensures players are recreated after dying. The ```RespawnManager``` script is responsible for managing these events. When a player is instantiated on the network (```OnNetworkSpawn()```), the script checks if it is the server and, if so, subscribes to the player spawn and despawn events. The ```OnPlayerSpawned``` event is used to associate each player's death event (```OnDie```) with a method that handles respawning. When a player dies, the ```PlayerDie()``` method is called, which destroys the player object and starts a coroutine (```RespawnPlayer```) to recreate the player after a defined wait time (```respawnDelay```).
 
 The ```RespawnPlayer``` coroutine waits for the defined respawn time and then obtains a new spawn position from the ```SpawnManager```. This manager selects an appropriate position for the player, ensuring that they do not spawn too close to other players. A new player object is then instantiated and configured for the original client. The ```SpawnManager``` provides the spawn positions and checks player proximity to prevent collisions during respawn.
+
+### Names Above the Head
+
+For the player names, I used a combination of  ```ServerRpc``` and ```ClientRpc``` to ensure that all clients have access to the player's name and can update the user interface (UI) accordingly. When a player enters the game, the ```SubmitPlayerNameServerRpc()``` method is called, sending the player's name to the server. The server, in turn, propagates this information to all clients using the ```UpdatePlayerNameClientRpc()``` method.
+
+When the network object is instantiated (```OnNetworkSpawn()```), the player's name is configured and synchronized. If it is the local player, the name is obtained from the ```JoinManager```, which is where the client enters their nickname at the beginning of the application, and sent to the server via ```SubmitPlayerNameServerRpc()```. The server updates the name information and uses ```UpdatePlayerNameClientRpc()``` to notify all clients about the player's name. The ```OnPlayerNameChanged``` event is executed to notify any listeners about the name setting.
+
+Additionally, when requesting all player names (```RequestAllPlayerNamesServerRpc()```), the server sends the names of all connected players to the client that made the request, ensuring that the player list is always up to date. This system ensures that player names are synchronized. In the game, the player's name can only be set at the beginning and cannot be changed later.
+
+![Player Name](./Images/player_name.png)
