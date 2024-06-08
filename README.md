@@ -129,3 +129,11 @@ To avoid lag effects, the healing space is immediately deactivated on the client
 Changes in the ```isActive``` and ```remainingHealCooldown``` variables trigger the ```OnActiveChanged()``` and ```OnCooldownChanged()``` methods, which visually update the models and the timer on the clients.
 
 ![Healing Spaces](./Images/healing_spaces.png)
+
+## Game Manager
+
+The ```GameManager``` controls the start, end, and restart of games, managing the game timer, player scores, and overall game state. In the ```OnNetworkSpawn()``` method, if the server is active, the game starts by calling the ```StartGame()``` method, which sets the game duration and begins the countdown with the ```GameTimerCoroutine()```.
+
+The game timer is managed by the server, which decrements the value every second and updates all clients through the ```UpdateTimerClientRpc()``` method, keeping the time synchronized across all devices. When the timer reaches zero, the game ends, and the ```EndGame()``` method is called. This method disables player movement and shooting and removes active projectiles in the game through ```EndGameClientRpc()``` and ```EndGameServerRpc()```, ensuring all actions stop until a new game begins. The ```EndGameServerRpc()``` method removes projectiles that cause real damage, while the ```EndGameClientRpc()``` method removes visual projectiles (dummy projectiles).
+
+After the game ends, the coroutine ```NewGameCountdownCoroutine()``` starts a countdown for the next game, updating clients with the current winner and the time remaining until the next game through ```UpdateEndGameTextClientRpc()```. When the countdown ends, the ```RestartGame()``` method is called, resetting the health and scores of players, resetting healing spaces, and reactivating player movement and shooting. The initial positions of players are also reset using a new random spawn, and these actions are synchronized with clients using ```StartNewGameClientRpc()```.
