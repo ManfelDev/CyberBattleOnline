@@ -78,3 +78,5 @@ The camera smoothly follows the local player by initializing with the ```FindLoc
 In the ```Start()``` method, the camera locates the local player. During each frame in the ```Update()``` method, the camera checks again if the local player is defined. If not, it attempts to locate the player again using ```FindLocalPlayer()```.
 
 Once the local player is found, the camera calculates the desired position based on the player's current position, keeping the z-coordinate constant to maintain the camera's depth. The camera's position is then smoothed using ```Vector3.Lerp```, interpolating the camera's current position to the desired position based on the smoothing speed (```smoothSpeed```).
+
+![camera](https://github.com/ManfelDev/CyberBattleOnline/assets/115217461/1699486f-007a-4e9e-921a-7b5f763f981c)
