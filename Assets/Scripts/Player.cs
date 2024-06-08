@@ -9,16 +9,22 @@ public class Player : Character
     [SerializeField] private TextMeshProUGUI playerNameText;
 
     private Vector2 movement;
-    private float   lastShotTime;
+    private float lastShotTime;
 
-    public FixedString32Bytes   playerName;
+    public FixedString32Bytes playerName;
     public NetworkVariable<int> Score = new NetworkVariable<int>();
-    
+
     public int GetScore => Score.Value;
 
     public static event Action<Player> OnPlayerSpawned;
     public static event Action<Player> OnPlayerDespawned;
     public static event Action<ulong, FixedString32Bytes> OnPlayerNameChanged;
+
+    private bool canMove = true;
+    private bool canShoot = true;
+
+    public bool CanMove => canMove;
+    public bool CanShoot => canShoot;
 
     public override void OnNetworkSpawn()
     {
@@ -87,13 +93,13 @@ public class Player : Character
 
     private void Update()
     {
-        if (!IsLocalPlayer) return;
+        if (!IsLocalPlayer || !canMove) return;
 
         // Get input for movement
         movement = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         // Handle shooting
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButton("Fire1") && canShoot)
         {
             Shoot();
         }
@@ -101,7 +107,7 @@ public class Player : Character
 
     private void FixedUpdate()
     {
-        if (!IsLocalPlayer) return;
+        if (!IsLocalPlayer || !canMove) return;
 
         // Move the player
         rigidBody.MovePosition(rigidBody.position + movement * speed * Time.fixedDeltaTime);
@@ -109,7 +115,7 @@ public class Player : Character
 
     private void LateUpdate()
     {
-        if (!IsLocalPlayer) return;
+        if (!IsLocalPlayer || !canMove) return;
 
         // Get mouse position for rotation
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -177,5 +183,18 @@ public class Player : Character
     {
         GameObject projectileInstance = Instantiate(clientLaserPrefab, spawnPos, Quaternion.identity);
         projectileInstance.transform.up = direction;
+    }
+
+    public void DisableMovementAndShooting()
+    {
+        canMove = false;
+        canShoot = false;
+        rigidBody.velocity = Vector2.zero;
+    }
+
+    public void EnableMovementAndShooting()
+    {
+        canMove = true;
+        canShoot = true;
     }
 }

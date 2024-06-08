@@ -51,6 +51,7 @@ public class NetworkSetup : MonoBehaviour
     private bool            isRelay;
     private UnityTransport  transport;
     private RelayHostData   relayData;
+    private GameManager     gameManager;
 
     public void OnClickServer()
     {
@@ -238,6 +239,11 @@ public class NetworkSetup : MonoBehaviour
     {
         Debug.LogError($"Player {clientId} connected, prefab index = {playerPrefabIndex}!");
 
+        if (gameManager == null)
+        {
+            gameManager = FindObjectOfType<GameManager>();
+        }
+
         // Get a free spot for this player from the SpawnManager
         var spawnPos = FindObjectOfType<SpawnManager>().GetSpawnPosition();
 
@@ -345,7 +351,6 @@ public class NetworkSetup : MonoBehaviour
         startUI.SetActive(true);
         joinUI.SetActive(false);
     }
-
 
     private async Task<JoinAllocation> JoinAllocationAsync(string joinCode)
     {

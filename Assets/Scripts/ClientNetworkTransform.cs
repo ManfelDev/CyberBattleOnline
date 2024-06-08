@@ -23,7 +23,6 @@ public class ClientNetworkTransform : NetworkTransform
                     TryCommitTransformToServer(transform, NetworkManager.LocalTime.Time);
                 }
             }
-
         }
     }
 

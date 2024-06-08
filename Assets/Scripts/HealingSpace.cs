@@ -10,8 +10,8 @@ public class HealingSpace : NetworkBehaviour
     [SerializeField] private int                healAmount = 50;
     [SerializeField] private float              healCooldown = 15;
 
-    private NetworkVariable<float> remainingHealCooldown = new NetworkVariable<float>();
-    private NetworkVariable<bool> isActive = new NetworkVariable<bool>();
+    public NetworkVariable<float> remainingHealCooldown = new NetworkVariable<float>();
+    public NetworkVariable<bool> isActive = new NetworkVariable<bool>();
 
     public override void OnNetworkSpawn()
     {
@@ -79,9 +79,17 @@ public class HealingSpace : NetworkBehaviour
         timerText.text = newValue > 0 ? $"{newValue:F0}" : string.Empty;
     }
 
-    private void OnActiveChanged (bool previousValue, bool newValue)
+    private void OnActiveChanged(bool previousValue, bool newValue)
     {
         ActiveModel.SetActive(newValue);
         InactiveModel.SetActive(!newValue);
+    }
+
+    public void ResetHealingSpace()
+    {
+        isActive.Value = true;
+        remainingHealCooldown.Value = 0;
+        OnActiveChanged(false, true);
+        OnCooldownChanged(0, 0);
     }
 }
