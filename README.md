@@ -46,3 +46,11 @@ For the health system, I used a network variable (```NetworkVariable<int>```) to
 The health UI is updated across all clients through listeners added to the network variable ```CurrentHealth```. These listeners ensure that the health bar and color are updated whenever the player's health changes.
 
 ![Player Health](./Images/player_health.png)
+
+### Score
+
+For the score, I again used a network variable (```NetworkVariable<int>```) so that all clients are aware of score changes and can update the user interface (UI) accordingly. This network variable can only be modified by the server; if a client attempts to change it, nothing happens. Each player's score is managed exclusively by the server and then synchronized with the clients. When a player earns points, the ```AddScore()``` method is called, incrementing the ```Score``` variable. This update is automatically propagated to all clients. 
+
+The score UI is updated through the ```ScoreDisplay``` script, which periodically checks if the local player is known and, if so, updates the score text on the screen. This script ensures that the displayed score is always that of the player/client. Each client only sees their own updated score.
+
+![Player Score](./Images/player_score.png)
