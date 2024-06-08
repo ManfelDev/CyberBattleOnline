@@ -95,3 +95,15 @@ This method has several benefits, such as allowing the player to see a projectil
 ![Projectiles](./Images/projectiles.png)
 
 *(Print screen of the same frame of a shot fired from the server side and the client side (a sprite renderer was added to the real projectile just to take the print screen))*
+
+## Leaderboard
+
+For the leaderboard, I used a ```NetworkList``` to maintain the list of players and their scores synchronized between the server and all clients. When a player enters the game, their data is added to the ```NetworkList<LeaderboardEntityState>```, a struct that I've created to store important information from the clients, which is monitored by all clients to update the leaderboard visually.
+
+When the network object is instantiated (```OnNetworkSpawn```), the leaderboard is configured so that clients monitor changes in the list (```OnLeaderboardEntitiesChanged```). On the server, player spawn and despawn events (```OnPlayerSpawned```, ```OnPlayerDespawned```) are used to add and remove players from the leaderboard. Players' names are set at the beginning of the game by the players themselves and synchronized with the server when they join the game, as explained earlier. When adding a player to the leaderboard, the server creates a new instance of ```LeaderboardEntityState``` with the client's ID, the player's name, and the initial score. This state is then added to the ```NetworkList```, which notifies all clients to update their leaderboard displays.
+
+The ```ClientRpc``` method ```UpdatePlayerNameClientRpc()``` ensures that players' names are propagated to all clients when the player joins the game. The players' scores and their ranking on the leaderboard are automatically updated through the ```NetworkList```, and these changes are reflected in real time in the UI.
+
+The leaderboard UI is managed by the ```LeaderBoardEntityDisplay``` script, which visually updates the players' positions and scores. The leaderboard is sorted by score, from highest to lowest, ensuring that the players with the best scores appear at the top. Additionally, the local player's name is displayed in a different color to highlight their position if they are on the leaderboard.
+
+![Leaderboard](./Images/leaderboard.png)
