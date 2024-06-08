@@ -2359,7 +2359,7 @@ MonoBehaviour:
   startUI: {fileID: 626254926}
   serverUI: {fileID: 407847395}
   joinUI: {fileID: 664322151}
-  maxPlayers: 1
+  maxPlayers: 10
 --- !u!1 &646468969
 GameObject:
   m_ObjectHideFlags: 0

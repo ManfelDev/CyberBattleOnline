@@ -145,7 +145,7 @@ public class Player : Character
     }
 
     [ServerRpc]
-    private void RequestAllPlayerNamesServerRpc(ServerRpcParams rpcParams = default)
+    private void RequestAllPlayerNamesServerRpc()
     {
         foreach (var player in FindObjectsOfType<Player>())
         {

@@ -17,9 +17,4 @@ public class Character : NetworkBehaviour
     [SerializeField] protected float      shotCooldown = 0.5f;
 
     public Health Health => health;
-
-    public void IncreaseSpeed(float amount)
-    {
-        speed *= amount;
-    }
 }

@@ -61,6 +61,25 @@ public class HealingSpace : NetworkBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D other) 
+    {
+        if (!IsServer) return;
+
+        if (other.TryGetComponent(out Player player))
+        {
+            if (isActive.Value)
+            {
+                if (player.Health.CurrentHealth.Value == player.Health.MaxHealth) return;
+                
+                player.Health.Heal(healAmount);
+
+                isActive.Value = false;
+
+                remainingHealCooldown.Value = healCooldown;
+            }
+        }
+    }
+
     private void Update()
     {
         if (!IsServer) return;

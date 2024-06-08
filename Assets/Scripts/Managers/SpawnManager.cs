@@ -27,7 +27,7 @@ public class SpawnManager : MonoBehaviour
         }
         return spawnPos;
     }
-    
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -36,5 +36,4 @@ public class SpawnManager : MonoBehaviour
             Gizmos.DrawWireSphere(playerSpawnLocation.position, spawnDistance);
         }
     }
-    
 }
