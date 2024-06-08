@@ -138,4 +138,4 @@ The game timer is managed by the server, which decrements the value every second
 
 After the game ends, the coroutine ```NewGameCountdownCoroutine()``` starts a countdown for the next game, updating clients with the current winner and the time remaining until the next game through ```UpdateEndGameTextClientRpc()```. When the countdown ends, the ```RestartGame()``` method is called, resetting the health and scores of players, resetting healing spaces, and reactivating player movement and shooting. The initial positions of players are also reset using a new random spawn, and these actions are synchronized with clients using ```StartNewGameClientRpc()```.
 
-![game_manager](https://github.com/ManfelDev/CyberBattleOnline/assets/115217461/250c732b-1c9e-4356-8acc-8b0de09c10ec)
+![game_manager](https://github.com/ManfelDev/CyberBattleOnline/assets/115217461/3749d638-81ef-4dd3-85b8-d3e0c547bfaf)
