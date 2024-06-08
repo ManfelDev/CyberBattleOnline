@@ -27,6 +27,8 @@ The ```StartAsClientCR()``` coroutine manages the client's connection process. A
 In NGO, the server controls everything (Server authority). All the clients do is view the game and provide inputs, which the server processes to produce the output.
 The main disadvantage of this approach is that whenever the player wants to do something, they have to send a message to the server, which decides and sends back a message with what will happen. This introduces latency based on the player's connection to the server, resulting in the total latency being the player's latency to the server plus the latency of receiving the server's message. For instance, if this latency is 10ms, the client's latency would be 10ms + 10ms = 20ms, resulting in a 20-millisecond delay between the action and what the player perceives will happen.
 
+![ping-animation-dark](https://github.com/ManfelDev/CyberBattleOnline/assets/115217461/ccbb6d8b-2ffd-4544-917c-d79110380fb7)
+
 ### Movement
 
 If the player’s movement is linked to server-authoritative code, every time the player presses to move, there will always be a delay before the action actually happens. To avoid this, I gave authority to the clients over their own controls, making the game more responsive. However, this brings the risk of someone hacking the clients and teleporting around the map since the server will trust the information sent by the clients.
@@ -36,4 +38,3 @@ To implement this, I used Unity’s ```NetworkTransform``` and created a ```Clie
 For player movement, as well as for other objects that need initialization, instead of using the ```Start()``` method, which starts too early, I used ```OnNetworkSpawn()```. In networking, there can be some delay, and some things need to be set up first. ```OnNetworkSpawn()``` functions much like the ```Start()``` method but is called when everything on the network is already set up.
 
 When synchronized, ```OnNetworkSpawn()``` can define the owner of the object and all relevant information about the object. In this case, I checked if the client owns the player to execute the following code only if they are the owner. I applied the same approach in the ```Update()```, ```FixedUpdate()```, and ```LateUpdate()``` methods.
-
