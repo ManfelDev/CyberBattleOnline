@@ -54,3 +54,9 @@ For the score, I again used a network variable (```NetworkVariable<int>```) so t
 The score UI is updated through the ```ScoreDisplay``` script, which periodically checks if the local player is known and, if so, updates the score text on the screen. This script ensures that the displayed score is always that of the player/client. Each client only sees their own updated score.
 
 ![Player Score](./Images/player_score.png)
+
+### Respawn/despawn
+
+For the respawn and despawn of players, I used a respawn management system that ensures players are recreated after dying. The ```RespawnManager``` script is responsible for managing these events. When a player is instantiated on the network (```OnNetworkSpawn()```), the script checks if it is the server and, if so, subscribes to the player spawn and despawn events. The ```OnPlayerSpawned``` event is used to associate each player's death event (```OnDie```) with a method that handles respawning. When a player dies, the ```PlayerDie(Player player)``` method is called, which destroys the player object and starts a coroutine (```RespawnPlayer```) to recreate the player after a defined wait time (```respawnDelay```).
+
+The ```RespawnPlayer``` coroutine waits for the defined respawn time and then obtains a new spawn position from the ```SpawnManager```. This manager selects an appropriate position for the player, ensuring that they do not spawn too close to other players. A new player object is then instantiated and configured for the original client. The ```SpawnManager``` provides the spawn positions and checks player proximity to prevent collisions during respawn.
