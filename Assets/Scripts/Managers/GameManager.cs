@@ -5,10 +5,13 @@ using TMPro;
 
 public class GameManager : NetworkBehaviour
 {
-    [SerializeField] private float              gameDuration = 600f;
+    [Header("References")]
     [SerializeField] private TextMeshProUGUI    timerText;
     [SerializeField] private GameObject         endGameUI;
     [SerializeField] private TextMeshProUGUI    endGameText;
+
+    [Header("Settings")]
+    [SerializeField] private float              gameDuration = 600f;
     [SerializeField] private float              newGameCountdownDuration = 10f;
 
     private float timer;

@@ -7,9 +7,12 @@ using UnityEngine.UI;
 
 public class Leaderboard : NetworkBehaviour
 {
+    [Header("References")]    
     [SerializeField] private Transform                  leaderboardEntitiesHolder;
     [SerializeField] private LeaderBoardEntityDisplay   leaderboardEntityPrefab;
     [SerializeField] private Image                      leaderboardBackground;
+
+    [Header("Settings")]
     [SerializeField] private int                        maxEntities = 5;
 
     private NetworkList<LeaderboardEntityState> leaderboardEntities;

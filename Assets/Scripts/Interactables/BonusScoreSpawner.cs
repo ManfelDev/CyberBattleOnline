@@ -3,11 +3,15 @@ using Unity.Netcode;
 
 public class BonusScoreSpawner : NetworkBehaviour
 {
+    [Header("References")]
     [SerializeField] private BonusScore     bonusScorePrefab;
-    [SerializeField] private int            maxBonusScore = 50;
-    [SerializeField] private int            scoreAdded = 5;
     [SerializeField] private Collider2D     spawnArea;
     [SerializeField] private LayerMask[]    avoidLayers;
+
+    [Header("Settings")]
+    [SerializeField] private int            maxBonusScore = 50;
+    [SerializeField] private int            scoreAdded = 5;
+    
 
     public override void OnNetworkSpawn()
     {

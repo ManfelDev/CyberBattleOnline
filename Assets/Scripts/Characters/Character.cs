@@ -12,7 +12,7 @@ public class Character : NetworkBehaviour
     [SerializeField] protected Health      health;
     [SerializeField] protected Rigidbody2D rigidBody;
 
-    [Header("Stats")]
+    [Header("Settings")]
     [SerializeField] protected float      speed = 200;
     [SerializeField] protected float      shotCooldown = 0.5f;
 

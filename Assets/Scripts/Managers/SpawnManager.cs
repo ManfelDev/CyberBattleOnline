@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    [Header("Settings")]
     [SerializeField] private List<Transform> playerSpawnLocations;
     [SerializeField] private int             spawnDistance = 200;
 

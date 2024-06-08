@@ -4,6 +4,7 @@ using System;
 
 public class Health : NetworkBehaviour
 {
+    [Header("Settings")]
     [SerializeField] private int maxHealth = 100;
 
     public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>();

@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class HealingSpace : NetworkBehaviour
 {
+    [Header("References")]
     [SerializeField] private GameObject         ActiveModel;
     [SerializeField] private GameObject         InactiveModel;
     [SerializeField] private TextMeshProUGUI    timerText;
+
+    [Header("Settings")]
     [SerializeField] private int                healAmount = 50;
     [SerializeField] private float              healCooldown = 15;
 

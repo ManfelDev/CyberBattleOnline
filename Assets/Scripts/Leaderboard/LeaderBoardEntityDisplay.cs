@@ -5,6 +5,7 @@ using Unity.Netcode;
 
 public class LeaderBoardEntityDisplay : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private TextMeshProUGUI    playerNameText;
     [SerializeField] private Color              playerColor;
 

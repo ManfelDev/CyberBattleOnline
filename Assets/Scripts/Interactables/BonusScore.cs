@@ -4,6 +4,7 @@ using System;
 
 public class BonusScore : NetworkBehaviour
 {
+    [Header("References")]
     [SerializeField] private SpriteRenderer[] spriteRenderers;
 
     private int     bonusScore;

@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class RespawnManager : NetworkBehaviour
 {
+    [Header("Settings")]
     [SerializeField] private NetworkObject playerPrefab;
+
+    [Header("Settings")]
     [SerializeField] private float         respawnDelay = 5.0f;
 
     public override void OnNetworkSpawn()

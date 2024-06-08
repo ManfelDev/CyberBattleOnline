@@ -6,6 +6,7 @@ using System;
 
 public class Player : Character
 {
+    [Header("References")]
     [SerializeField] private TextMeshProUGUI playerNameText;
 
     private Vector2 movement;

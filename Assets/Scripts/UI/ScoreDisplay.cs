@@ -3,6 +3,7 @@ using TMPro;
 
 public class ScoreDisplay : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private TextMeshProUGUI scoreText;
 
     private Player localPlayer;

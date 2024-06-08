@@ -37,9 +37,8 @@ public class NetworkSetup : MonoBehaviour
         public byte[]   Key;
     }
 
+    [Header("References")]
     [SerializeField] private List<Player>       playerPrefabs;
-    [SerializeField] private List<Transform>    playerSpawnLocations;
-    [SerializeField] private int                maxPlayers = 10;
     [SerializeField] private TextMeshProUGUI    textJoinCode;
     [SerializeField] private TextMeshProUGUI    loadingText;
     [SerializeField] private TextMeshProUGUI    scoreText;
@@ -47,6 +46,10 @@ public class NetworkSetup : MonoBehaviour
     [SerializeField] private GameObject         startUI;
     [SerializeField] private GameObject         serverUI;
     [SerializeField] private GameObject         joinUI;
+
+    [Header("Settings")]
+    [SerializeField] private int                maxPlayers = 10;
+    [SerializeField] private List<Transform>    playerSpawnLocations;
 
     private int             playerPrefabIndex = 0;
     private bool            isRelay;

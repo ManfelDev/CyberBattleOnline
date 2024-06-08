@@ -4,11 +4,14 @@ using Unity.Collections;
 
 public class JoinManager : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private TMP_InputField inputFieldJoinCode;
     [SerializeField] private TMP_InputField inputFieldPlayerName;
-    [SerializeField] private int            maxPlayerNameLength = 12;
     [SerializeField] private GameObject     joinUI;
     [SerializeField] private NetworkSetup   networkSetup;
+
+    [Header("Settings")]
+    [SerializeField] private int            maxPlayerNameLength = 12;
 
     public static string             joinCode;
     public static FixedString32Bytes playerName;
