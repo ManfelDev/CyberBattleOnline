@@ -38,3 +38,11 @@ To implement this, I used Unity’s ```NetworkTransform``` and created a ```Clie
 For player movement, as well as for other objects that need initialization, instead of using the ```Start()``` method, which starts too early, I used ```OnNetworkSpawn()```. In networking, there can be some delay, and some things need to be set up first. ```OnNetworkSpawn()``` functions much like the ```Start()``` method but is called when everything on the network is already set up.
 
 When synchronized, ```OnNetworkSpawn()``` can define the owner of the object and all relevant information about the object. In this case, I checked if the client owns the player to execute the following code only if they are the owner. I applied the same approach in the ```Update()```, ```FixedUpdate()```, and ```LateUpdate()``` methods.
+
+### Health
+
+For the health system, I used a network variable (```NetworkVariable<int>```) to ensure that all clients are aware of changes in health and can update the UI accordingly. This variable can only be modified by the server, and if a client tries to alter it, nothing happens. Each player's health is managed exclusively by the server and synchronized with the clients. When the object is instantiated on the network (```OnNetworkSpawn()```), the health is initialized by the server. If the player takes damage, the ```TakeDamage()``` method is called, which modifies the player's health through the ```ModifyHealth()``` method. This method ensures that the player's health does not exceed the defined limits, and if health reaches zero, it triggers an event to indicate that the player has died. Similarly, if the player heals, the Heal() method is called, which also uses ```ModifyHealth()``` to adjust the player's health within the allowed limits.
+
+The health UI is updated across all clients through listeners added to the network variable ```CurrentHealth```. These listeners ensure that the health bar and color are updated whenever the player's health changes.
+
+![Player Health](./Images/player_health.png)
