@@ -79,6 +79,8 @@ In the ```Start()``` method, the camera locates the local player. During each fr
 
 Once the local player is found, the camera calculates the desired position based on the player's current position, keeping the z-coordinate constant to maintain the camera's depth. The camera's position is then smoothed using ```Vector3.Lerp```, interpolating the camera's current position to the desired position based on the smoothing speed (```smoothSpeed```).
 
+![camera](https://github.com/ManfelDev/CyberBattleOnline/assets/115217461/1699486f-007a-4e9e-921a-7b5f763f981c)
+
 ## Projectile
 
 To create projectiles, specifically the lasers fired by players, I used the following method:
