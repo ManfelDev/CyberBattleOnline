@@ -10,12 +10,10 @@ public class Player : Character
     [SerializeField] private TextMeshProUGUI playerNameText;
 
     private Vector2 movement;
-    private float lastShotTime;
+    private float   lastShotTime;
 
-    public FixedString32Bytes playerName;
+    private FixedString32Bytes playerName;
     public NetworkVariable<int> Score = new NetworkVariable<int>();
-
-    public int GetScore => Score.Value;
 
     public static event Action<Player> OnPlayerSpawned;
     public static event Action<Player> OnPlayerDespawned;
@@ -24,8 +22,10 @@ public class Player : Character
     private bool canMove = true;
     private bool canShoot = true;
 
+    public FixedString32Bytes PlayerName => playerName;
     public bool CanMove => canMove;
     public bool CanShoot => canShoot;
+    public int GetScore => Score.Value;
 
     public override void OnNetworkSpawn()
     {
@@ -48,47 +48,6 @@ public class Player : Character
         if (IsServer)
         {
             OnPlayerDespawned?.Invoke(this);
-        }
-    }
-
-    [ServerRpc]
-    private void SubmitPlayerNameServerRpc(string name)
-    {
-        playerName = name;
-        UpdatePlayerNameClientRpc(name);
-        OnPlayerNameChanged?.Invoke(OwnerClientId, playerName);
-    }
-
-    [ClientRpc]
-    private void UpdatePlayerNameClientRpc(string name)
-    {
-        playerName = name;
-        playerNameText.text = playerName.Value;
-        OnPlayerNameChanged?.Invoke(OwnerClientId, playerName);
-    }
-
-    [ServerRpc]
-    private void RequestAllPlayerNamesServerRpc(ServerRpcParams rpcParams = default)
-    {
-        foreach (var player in FindObjectsOfType<Player>())
-        {
-            UpdatePlayerNameClientRpc(player.playerName.Value, player.OwnerClientId);
-        }
-    }
-
-    [ClientRpc]
-    private void UpdatePlayerNameClientRpc(string name, ulong clientId)
-    {
-        if (NetworkManager.Singleton.LocalClientId != clientId)
-        {
-            foreach (var player in FindObjectsOfType<Player>())
-            {
-                if (player.OwnerClientId == clientId)
-                {
-                    player.playerName = name;
-                    player.playerNameText.text = name;
-                }
-            }
         }
     }
 
@@ -158,6 +117,66 @@ public class Player : Character
         SpawnDummyProjectile(spawnPos, direction);
     }
 
+    private void SpawnDummyProjectile(Vector3 spawnPos, Vector3 direction)
+    {
+        GameObject projectileInstance = Instantiate(clientLaserPrefab, spawnPos, Quaternion.identity);
+        projectileInstance.transform.up = direction;
+    }
+
+    public void DisableMovementAndShooting()
+    {
+        canMove = false;
+        canShoot = false;
+        rigidBody.velocity = Vector2.zero;
+    }
+
+    public void EnableMovementAndShooting()
+    {
+        canMove = true;
+        canShoot = true;
+    }
+
+    [ServerRpc]
+    private void SubmitPlayerNameServerRpc(string name)
+    {
+        playerName = name;
+        UpdatePlayerNameClientRpc(name);
+        OnPlayerNameChanged?.Invoke(OwnerClientId, playerName);
+    }
+
+    [ServerRpc]
+    private void RequestAllPlayerNamesServerRpc(ServerRpcParams rpcParams = default)
+    {
+        foreach (var player in FindObjectsOfType<Player>())
+        {
+            UpdatePlayerNameClientRpc(player.playerName.Value, player.OwnerClientId);
+        }
+    }
+
+    [ClientRpc]
+    private void UpdatePlayerNameClientRpc(string name)
+    {
+        playerName = name;
+        playerNameText.text = playerName.Value;
+        OnPlayerNameChanged?.Invoke(OwnerClientId, playerName);
+    }
+
+    [ClientRpc]
+    private void UpdatePlayerNameClientRpc(string name, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId != clientId)
+        {
+            foreach (var player in FindObjectsOfType<Player>())
+            {
+                if (player.OwnerClientId == clientId)
+                {
+                    player.playerName = name;
+                    player.playerNameText.text = name;
+                }
+            }
+        }
+    }
+
     [ClientRpc]
     private void SpawnDummyProjectileClientRpc(Vector3 spawnPos, Vector3 direction)
     {
@@ -178,24 +197,5 @@ public class Player : Character
         }
 
         SpawnDummyProjectileClientRpc(spawnPos, direction);
-    }
-
-    private void SpawnDummyProjectile(Vector3 spawnPos, Vector3 direction)
-    {
-        GameObject projectileInstance = Instantiate(clientLaserPrefab, spawnPos, Quaternion.identity);
-        projectileInstance.transform.up = direction;
-    }
-
-    public void DisableMovementAndShooting()
-    {
-        canMove = false;
-        canShoot = false;
-        rigidBody.velocity = Vector2.zero;
-    }
-
-    public void EnableMovementAndShooting()
-    {
-        canMove = true;
-        canShoot = true;
     }
 }

@@ -68,7 +68,7 @@ public class GameManager : NetworkBehaviour
             if (player.GetScore > highestScore)
             {
                 highestScore = player.GetScore;
-                highestScoringPlayer = player.playerName.Value;
+                highestScoringPlayer = player.PlayerName.Value;
             }
         }
         return highestScoringPlayer;

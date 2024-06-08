@@ -10,7 +10,7 @@ public class Health : NetworkBehaviour
     public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>();
 
     public bool isDead => (CurrentHealth.Value <= 0);
-    public int MaxHealth => maxHealth;
+    public int  MaxHealth => maxHealth;
 
     public Action<Health> OnDie;
 
@@ -43,41 +43,4 @@ public class Health : NetworkBehaviour
             OnDie?.Invoke(this);
         }
     }
-
-    /*private void Die(GameObject shooter)
-    {
-        Player player = GetComponent<Player>();
-
-        if (player != null)
-        {
-            RoundManager.Instance.PlayerDied();
-            this.gameObject.SetActive(false);
-
-            if (shooter != null)
-            {
-                Player playerShooter = shooter.GetComponent<Player>();
-                if (playerShooter != null)
-                {
-                    playerShooter.AddScore(20);
-                    Debug.Log("Score: " + playerShooter.GetScore);
-                }
-            }
-        }
-
-        else
-        {
-            RoundManager.Instance.EnemyDied();
-            Destroy(this.gameObject);
-
-            if (shooter != null)
-            {
-                Player playerShooter = shooter.GetComponent<Player>();
-                if (playerShooter != null)
-                {
-                    playerShooter.AddScore(10);
-                    Debug.Log("Score " + playerShooter.name + ": "+ playerShooter.GetScore);
-                }
-            }
-        }
-    }*/
 }

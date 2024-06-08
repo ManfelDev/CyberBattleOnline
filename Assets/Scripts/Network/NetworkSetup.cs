@@ -112,23 +112,16 @@ public class NetworkSetup : MonoBehaviour
 
         if (isRelay)
         {
-            // Vou chamar uma função que é async (ver abaixo)
-            // Isso devolve um Task 
             var loginTask = Login();
 
-            // Fico à espera que a Task acabe, verificando o IsComplete
             yield return new WaitUntil(() => loginTask.IsCompleted);
 
-            // Verifico se houve um exception na tarefa. Esta foi 
-            // executada numa tarefa distinta, por isso não é propagada, e é normalmente
-            // como se propaga erros
             if (loginTask.Exception != null)
             {
                 Debug.LogError("Login failed: " + loginTask.Exception);
                 yield break;
             }
 
-            // Tarefa foi concluída, podiamos agora ir buscar o resultado (já vamos ver)
             Debug.Log("Login successfull!");
 
             var allocationTask = CreateAllocationAsync(maxPlayers);
@@ -393,7 +386,6 @@ public class NetworkSetup : MonoBehaviour
     [DllImport("user32.dll")]
     static extern IntPtr EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
 
-    // Delegate to filter windows
     private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
     private static IntPtr FindWindowByProcessId(uint processId)
     {

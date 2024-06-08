@@ -13,7 +13,7 @@ public class Leaderboard : NetworkBehaviour
     [SerializeField] private Image                      leaderboardBackground;
 
     [Header("Settings")]
-    [SerializeField] private int                        maxEntities = 5;
+    [SerializeField] private int maxEntities = 5;
 
     private NetworkList<LeaderboardEntityState> leaderboardEntities;
     private List<LeaderBoardEntityDisplay> leaderboardEntityDisplays = new List<LeaderBoardEntityDisplay>();
@@ -120,14 +120,14 @@ public class Leaderboard : NetworkBehaviour
         var entityState = new LeaderboardEntityState
         {
             ClientID = player.OwnerClientId,
-            PlayerName = player.playerName.Value,
+            PlayerName = player.PlayerName.Value,
             Score = 0
         };
 
         player.Score.OnValueChanged += (oldScore, newScore) => OnScoreChange(player.OwnerClientId, newScore);
 
         leaderboardEntities.Add(entityState);
-        UpdatePlayerName(player.OwnerClientId, player.playerName.Value);
+        UpdatePlayerName(player.OwnerClientId, player.PlayerName.Value);
     }
 
     private void PlayerDespawned(Player player)
