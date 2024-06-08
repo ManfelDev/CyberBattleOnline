@@ -27,4 +27,14 @@ public class SpawnManager : MonoBehaviour
         }
         return spawnPos;
     }
+    
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        foreach (var playerSpawnLocation in playerSpawnLocations)
+        {
+            Gizmos.DrawWireSphere(playerSpawnLocation.position, spawnDistance);
+        }
+    }
+    
 }

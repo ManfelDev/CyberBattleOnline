@@ -2359,18 +2359,7 @@ MonoBehaviour:
   startUI: {fileID: 626254926}
   serverUI: {fileID: 407847395}
   joinUI: {fileID: 664322151}
-  maxPlayers: 10
-  playerSpawnLocations:
-  - {fileID: 1898453026}
-  - {fileID: 87722441}
-  - {fileID: 70908050}
-  - {fileID: 1155244324}
-  - {fileID: 1175767874}
-  - {fileID: 1278758210}
-  - {fileID: 1243862581}
-  - {fileID: 407522872}
-  - {fileID: 42496702}
-  - {fileID: 531924593}
+  maxPlayers: 1
 --- !u!1 &646468969
 GameObject:
   m_ObjectHideFlags: 0
@@ -7679,7 +7668,15 @@ MonoBehaviour:
   playerSpawnLocations:
   - {fileID: 1898453026}
   - {fileID: 87722441}
-  spawnDistance: 200
+  - {fileID: 70908050}
+  - {fileID: 1155244324}
+  - {fileID: 1175767874}
+  - {fileID: 1278758210}
+  - {fileID: 1243862581}
+  - {fileID: 407522872}
+  - {fileID: 42496702}
+  - {fileID: 531924593}
+  spawnDistance: 165
 --- !u!4 &1096488094
 Transform:
   m_ObjectHideFlags: 0
@@ -28666,7 +28663,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Score: 000'
+  m_text: 'Score: 0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cb13c8abff5e518408debbbcad36296a, type: 2}
   m_sharedMaterial: {fileID: -6707112192356984912, guid: cb13c8abff5e518408debbbcad36296a, type: 2}

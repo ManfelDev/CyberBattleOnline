@@ -49,7 +49,6 @@ public class NetworkSetup : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private int                maxPlayers = 10;
-    [SerializeField] private List<Transform>    playerSpawnLocations;
 
     private int             playerPrefabIndex = 0;
     private bool            isRelay;
