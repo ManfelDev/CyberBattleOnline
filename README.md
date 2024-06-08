@@ -117,3 +117,13 @@ When a player attempts to collect a bonus, the ```Pick()``` method is called. Th
 The bonus collection is protected to ensure that two players do not collect the same bonus simultaneously. The server is the final authority that determines who collects the bonus first. When a bonus is collected, the ```OnPicked``` event is triggered, activating the ```OnBonusScorePicked()``` method on the server. This method repositions the bonus to a new random location and prepares it to be collected again by calling the ```Respawn()``` method, synchronizing these changes with all connected clients.
 
 ![Bonus Score](./Images/bonus_score.png)
+
+## Healing Spaces
+
+Healing spaces are managed by the server, which controls their activation and deactivation. When a player enters the area of a healing space, the server checks if the player has less than the maximum health. If so, the player is healed by the amount defined in ```healAmount```, and the healing space is deactivated, starting a cooldown through the ```NetworkVariable``` ```remainingHealCooldown```.
+
+To avoid lag effects, the healing space is immediately deactivated on the client side, and the server validates the healing, updating the ```isActive``` variable to synchronize the deactivation with all clients. The cooldown timer is decremented by the server in the ```Update()``` method, and when it reaches zero, the healing space is reactivated, updating the ```isActive``` variable again.
+
+Changes in the ```isActive``` and ```remainingHealCooldown``` variables trigger the ```OnActiveChanged()``` and ```OnCooldownChanged()``` methods, which visually update the models and the timer on the clients.
+
+![Healing Spaces](./Images/healing_spaces.png)
