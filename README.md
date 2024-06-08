@@ -70,3 +70,11 @@ When the network object is instantiated (```OnNetworkSpawn()```), the player's n
 Additionally, when requesting all player names (```RequestAllPlayerNamesServerRpc()```), the server sends the names of all connected players to the client that made the request, ensuring that the player list is always up to date. This system ensures that player names are synchronized. In the game, the player's name can only be set at the beginning and cannot be changed later.
 
 ![Player Name](./Images/player_name.png)
+
+## Camera
+
+The camera smoothly follows the local player by initializing with the ```FindLocalPlayer()``` method, which searches among all players and returns the transform of the player that belongs to the local client.
+
+In the ```Start()``` method, the camera locates the local player. During each frame in the ```Update()``` method, the camera checks again if the local player is defined. If not, it attempts to locate the player again using ```FindLocalPlayer()```.
+
+Once the local player is found, the camera calculates the desired position based on the player's current position, keeping the z-coordinate constant to maintain the camera's depth. The camera's position is then smoothed using ```Vector3.Lerp```, interpolating the camera's current position to the desired position based on the smoothing speed (```smoothSpeed```).
