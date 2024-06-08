@@ -43,6 +43,7 @@ public class NetworkSetup : MonoBehaviour
     [SerializeField] private TextMeshProUGUI    textJoinCode;
     [SerializeField] private TextMeshProUGUI    loadingText;
     [SerializeField] private TextMeshProUGUI    scoreText;
+    [SerializeField] private TextMeshProUGUI    invalidCodeText;
     [SerializeField] private GameObject         startUI;
     [SerializeField] private GameObject         serverUI;
     [SerializeField] private GameObject         joinUI;
@@ -84,6 +85,12 @@ public class NetworkSetup : MonoBehaviour
 
         startUI.SetActive(false);
         joinUI.SetActive(true);
+    }
+
+    public void OnClickBack()
+    {
+        startUI.SetActive(true);
+        joinUI.SetActive(false);
     }
     
     IEnumerator StartAsServerCR()
@@ -286,7 +293,6 @@ public class NetworkSetup : MonoBehaviour
             {
                 Debug.LogError("Login failed: " + loginTask.Exception);
                 loadingText.gameObject.SetActive(false);
-                ResetToStart();
                 yield break;
             }
 
@@ -301,7 +307,7 @@ public class NetworkSetup : MonoBehaviour
             {
                 Debug.LogError("Join allocation failed: " + joinAllocationTask.Exception);
                 loadingText.gameObject.SetActive(false);
-                ResetToStart();
+                InvalideCode();
                 yield break;
             }
             else
@@ -335,6 +341,12 @@ public class NetworkSetup : MonoBehaviour
         if (networkManager.StartClient())
         {
             Debug.Log($"Connecting on port {transport.ConnectionData.Port}...");
+
+            if (invalidCodeText.gameObject.activeSelf)
+            {
+                invalidCodeText.gameObject.SetActive(false);
+            }
+
             loadingText.gameObject.SetActive(false);
             scoreText.gameObject.SetActive(true);
         }
@@ -342,14 +354,13 @@ public class NetworkSetup : MonoBehaviour
         {
             Debug.LogError($"Failed to connect on port {transport.ConnectionData.Port}...");
             loadingText.gameObject.SetActive(false);
-            ResetToStart();
         }
     }
 
-    private void ResetToStart()
+    private void InvalideCode()
     {
-        startUI.SetActive(true);
-        joinUI.SetActive(false);
+        joinUI.SetActive(true);
+        invalidCodeText.gameObject.SetActive(true);
     }
 
     private async Task<JoinAllocation> JoinAllocationAsync(string joinCode)
