@@ -78,3 +78,18 @@ The camera smoothly follows the local player by initializing with the ```FindLoc
 In the ```Start()``` method, the camera locates the local player. During each frame in the ```Update()``` method, the camera checks again if the local player is defined. If not, it attempts to locate the player again using ```FindLocalPlayer()```.
 
 Once the local player is found, the camera calculates the desired position based on the player's current position, keeping the z-coordinate constant to maintain the camera's depth. The camera's position is then smoothed using ```Vector3.Lerp```, interpolating the camera's current position to the desired position based on the smoothing speed (```smoothSpeed```).
+
+## Projectile
+
+To create projectiles, specifically the lasers fired by players, I used the following method:
+
+- **Spawn of a "dummy projectile":** When the player clicks to shoot, a "dummy" projectile is created before anything is sent over the network. This "dummy" projectile is purely visual and does not cause any damage, making the game feel more responsive. (```SpawnDummyProjectile()```)
+- **Sending an RPC:** After creating the "dummy" projectile, an RPC (Remote Procedure Call) is sent to the server to attempt firing the actual projectile. An RPC is a remote procedure call where the player sends a message to the server. (```PrimaryFireServerRpc()```)
+- **Validation and Spawn on the Server:** The server receives the RPC, validates whether the player meets the necessary conditions to shoot, and if everything is correct, creates the real projectile. This real projectile, being on the server side, does not need any visuals. (```PrimaryFireServerRpc()```)
+- **Broadcast to Clients:** The server sends an RPC to all clients, requesting them to create a "dummy projectile." The original client that fired the projectile can ignore this RPC. (```SpawnDummyProjectileClientRpc()```)
+
+This method has several benefits, such as allowing the player to see a projectile immediately upon shooting, making the game feel more responsive. Additionally, it maintains server authority, ensuring that a player can never cause damage to someone without the server's validation. The server handles the damage and all important aspects of the projectile.
+
+![Projectiles](./Images/projectiles.png)
+
+*(Print screen of the same frame of a shot fired from the server side and the client side (a sprite renderer was added to the real projectile just to take the print screen))*
