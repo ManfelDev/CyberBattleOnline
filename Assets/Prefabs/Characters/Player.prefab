@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: cb13c8abff5e518408debbbcad36296a, type: 2}
+  m_sharedMaterial: {fileID: -6707112192356984912, guid: cb13c8abff5e518408debbbcad36296a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -911,40 +911,6 @@ MonoBehaviour:
   speed: 200
   shotCooldown: 0.5
   playerNameText: {fileID: 3938835393083158885}
-  playerName:
-    utf8LengthInBytes: 0
-    bytes:
-      offset0000:
-        byte0000: 0
-        byte0001: 0
-        byte0002: 0
-        byte0003: 0
-        byte0004: 0
-        byte0005: 0
-        byte0006: 0
-        byte0007: 0
-        byte0008: 0
-        byte0009: 0
-        byte0010: 0
-        byte0011: 0
-        byte0012: 0
-        byte0013: 0
-        byte0014: 0
-        byte0015: 0
-      byte0016: 0
-      byte0017: 0
-      byte0018: 0
-      byte0019: 0
-      byte0020: 0
-      byte0021: 0
-      byte0022: 0
-      byte0023: 0
-      byte0024: 0
-      byte0025: 0
-      byte0026: 0
-      byte0027: 0
-      byte0028: 0
-      byte0029: 0
   Score:
     m_InternalValue: 0
 --- !u!1 &8875374393570493609
