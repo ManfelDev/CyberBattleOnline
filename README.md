@@ -254,6 +254,10 @@ When the game manager starts a new game:
 
 ![Bandwidth New Game](./Images/bandwidth_new_game.png)
 
+## How to play
+
+Download the [game build](https://drive.google.com/file/d/1w_uSUAUTIYPGaEXFyqNCm9iNG-GcY-0h/view?usp=drive_link) and follow the [instructions](https://docs.google.com/document/d/1QhR17MIm-lyO7O4UFQlbbxZOIg33hsRhL4Y3RcrNLBU/edit?usp=sharing).
+
 ## References
 
 - [Unity - Network for GameObjects API](https://docs-multiplayer.unity3d.com/netcode/1.6.0/about/)
