@@ -6,7 +6,7 @@ Rafael José, a22202078
 
 ## Description
 
-Cyber Battle is a top-down shooter game, with laser guns, where the objective for players is to achieve the highest score possible within the time limit. It is a multiplayer game that uses Unity Networking (NGO) to synchronize player actions. Players compete against each other, collecting score-giving points scattered across the map, while the network ensures all interactions are recorded and reflected in real-time for all participants. When a player is eliminated, their points are reset.
+Cyber Battle is a top-down shooter game, with laser guns, where the objective for players is to achieve the highest score possible within the time limit. It is a multiplayer game that uses Unity Networking (NGO) and Unity Relay to synchronize player actions and facilitate connections. Players compete against each other, collecting score-giving points scattered across the map, while the network ensures all interactions are recorded and reflected in real-time for all participants. When a player is eliminated, their points are reset.
 
 ![Gameplay](./Images/gameplay.png)
 
@@ -137,3 +137,13 @@ The game timer is managed by the server, which decrements the value every second
 After the game ends, the coroutine ```NewGameCountdownCoroutine()``` starts a countdown for the next game, updating clients with the current winner and the time remaining until the next game through ```UpdateEndGameTextClientRpc()```. When the countdown ends, the ```RestartGame()``` method is called, resetting the health and scores of players, resetting healing spaces, and reactivating player movement and shooting. The initial positions of players are also reset using a new random spawn, and these actions are synchronized with clients using ```StartNewGameClientRpc()```.
 
 ![game_manager](https://github.com/ManfelDev/CyberBattleOnline/assets/115217461/3749d638-81ef-4dd3-85b8-d3e0c547bfaf)
+
+## Network Diagram
+
+Unity Relay is a service that facilitates multiplayer connectivity by routing traffic between players' devices without requiring a dedicated server. Relay helps to establish connections when direct peer-to-peer communication is not possible due to network configurations such as NATs or firewalls. By acting as an intermediary, Relay ensures that all players can connect to each other reliably. The Unity Relay system enhances the security of the peer-to-peer model by adding a server that acts as an intermediary for the connection between the Host and Clients.
+
+Advantages of using Unity Relay include easier setup for multiplayer games, reduced need for complex network configurations, and improved connectivity in cases where direct communication is not feasible. However, there are also some disadvantages, such as potential latency introduced by the relay server and the added cost associated with using the Relay service. Additionally, the reliance on an external service introduces a dependency that could affect game performance if the service experiences downtime or other issues.
+
+Below is a technical example of how this connection work, illustrating the use of Unity Relay with a the maximum players connected, of 10 players.
+
+![Network Diagram](./Images/network_diagram.png)
