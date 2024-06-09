@@ -6,13 +6,13 @@ Rafael José, a22202078
 
 ## Description
 
-Cyber Battle is a top-down shooter game, with laser guns, where the objective for players is to achieve the highest score possible within the time limit. It is a multiplayer game that uses Unity Networking (NGO) and Unity Relay to synchronize player actions and facilitate connections. Players compete against each other, collecting score-giving points scattered across the map, while the network ensures all interactions are recorded and reflected in real-time for all participants. When a player is eliminated, their points are reset.
+Cyber Battle is a top-down shooter game, with laser guns, where the objective for players is to achieve the highest score possible within the time limit. It is a multiplayer game that uses Unity Networking (NGO) and Unity Relay to synchronize player actions and facilitate connections. Players compete against each other, collecting score-giving points scattered across the map, while the network ensures all interactions are recorded and reflected in real-time for all participants. When a player is eliminated, their points are reset and he respawns after a certain amount of time.
 
 ![Gameplay](./Images/gameplay.png)
 
 ## Initialization
 
-When the executable is launched, the user initially has the option to start a server or a client. If the user clicks the "Start Server" button, the ```OnClickServer()``` method is called. In this method, the ```UnityTransport``` is configured, and it checks if the selected protocol is Relay. If it is, ```isRelay``` is set to true and the code input interface is displayed. Next, the ```StartCoroutine(StartAsServerCR())``` method is called to initiate the server process.
+When the executable is launched, the user initially has the option to start a server or a client. If the user clicks the "Start Server" button, the ```OnClickServer()``` method is called. In this method, the ```UnityTransport``` is configured, and it checks if the selected protocol is Relay. If it is, ```isRelay``` is set to true and the server interface with the code is displayed. Next, the ```StartCoroutine(StartAsServerCR())``` method is called to initiate the server process.
 
 Within the ```StartAsServerCR()``` coroutine, the ```NetworkManager``` and ```UnityTransport``` are enabled, and callbacks for client connection and disconnection are registered. If the transport is Relay, the server performs anonymous login to Unity services, creates an allocation for the session, and obtains a join code. This code is displayed on the server interface for other players to use to connect. The server is then started with ```networkManager.StartServer()``` and begins accepting client connections.
 
@@ -31,27 +31,27 @@ The main disadvantage of this approach is that whenever the player wants to do s
 
 ### Movement
 
-If the player’s movement is linked to server-authoritative code, every time the player presses to move, there will always be a delay before the action actually happens. To avoid this, I gave authority to the clients over their own controls, making the game more responsive. However, this brings the risk of someone hacking the clients and teleporting around the map since the server will trust the information sent by the clients.
+If the player’s movement is linked to server-authoritative code, every time the player presses to move, there will always be a delay before the action actually happens. To avoid this, I gave authority to the clients over their own transform, making the game more responsive. However, this brings the risk of someone hacking the clients and teleporting around the map since the server will trust the information sent by the clients.
 
 To implement this, I used Unity’s ```NetworkTransform``` and created a ```ClientNetworkTransform```. I overrode the ```OnIsServerAuthoritative()``` method to return false, disabling server authority. This means the client can directly update the object’s transform. On the client side, we need to identify if we own the object to update its position. To achieve this, I overrode the ```OnNetworkSpawn()``` method so that when players are spawned, they are set as owners. If it is our player, we can assume the transform, updating its position and rotation. I also overrode the ```Update()``` method, passing the information every frame that we continue to own the object, along with performing security checks to ensure the ```NetworkManager``` is connected to a client or is listening. If these conditions are true, we can alter the transform on the server, passing our transform and the time since the last synchronization using the ```NetworkManager```'s local time. This is necessary because each frame’s duration varies, and we need to interpolate the positions for smooth movement on the network.
 
 For player movement, as well as for other objects that need initialization, instead of using the ```Start()``` method, which starts too early, I used ```OnNetworkSpawn()```. In networking, there can be some delay, and some things need to be set up first. ```OnNetworkSpawn()``` functions much like the ```Start()``` method but is called when everything on the network is already set up.
 
-When synchronized, ```OnNetworkSpawn()``` can define the owner of the object and all relevant information about the object. In this case, I checked if the client owns the player to execute the following code only if they are the owner. I applied the same approach in the ```Update()```, ```FixedUpdate()```, and ```LateUpdate()``` methods.
+When synchronized, ```OnNetworkSpawn()``` can define the owner of the object and all relevant information about the object. In this case, I checked if the client owns the player to execute the following code only if they are the owner. I applied the same approach in the ```FixedUpdate()```, and ```LateUpdate()``` methods.
 
 ### Health
 
-For the health system, I used a network variable (```NetworkVariable<int>```) to ensure that all clients are aware of changes in health and can update the UI accordingly. This variable can only be modified by the server, and if a client tries to alter it, nothing happens. Each player's health is managed exclusively by the server and synchronized with the clients. When the object is instantiated on the network (```OnNetworkSpawn()```), the health is initialized by the server. If the player takes damage, the ```TakeDamage()``` method is called, which modifies the player's health through the ```ModifyHealth()``` method. This method ensures that the player's health does not exceed the defined limits, and if health reaches zero, it triggers an event to indicate that the player has died. Similarly, if the player heals, the Heal() method is called, which also uses ```ModifyHealth()``` to adjust the player's health within the allowed limits.
+For the health system, I used a network variable (```NetworkVariable<int> CurrentHealth```) to ensure that all clients are aware of changes in health and can update the UI accordingly. This variable can only be modified by the server, and if a client tries to alter it, nothing happens. Each player's health is managed exclusively by the server and synchronized with the clients. When the object is instantiated on the network (```OnNetworkSpawn()```), the health is initialized by the server. If the player takes damage, the ```TakeDamage()``` method is called, which modifies the player's health through the ```ModifyHealth()``` method. This method ensures that the player's health does not exceed the defined limits, and if health reaches zero, it triggers an event to indicate that the player has died. Similarly, if the player heals, the ```Heal()``` method is called, which also uses ```ModifyHealth()``` to adjust the player's health within the allowed limits.
 
-The health UI is updated across all clients through listeners added to the network variable ```CurrentHealth```. These listeners ensure that the health bar and color are updated whenever the player's health changes.
+The health UI is updated across all clients through listeners added to the network variable. These listeners ensure that the health bar and color are updated whenever the player's health changes.
 
 ![Player Health](./Images/player_health.png)
 
 ### Score
 
-For the score, I again used a network variable (```NetworkVariable<int>```) so that all clients are aware of score changes and can update the user interface (UI) accordingly. This network variable can only be modified by the server; if a client attempts to change it, nothing happens. Each player's score is managed exclusively by the server and then synchronized with the clients. When a player earns points, the ```AddScore()``` method is called, incrementing the ```Score``` variable. This update is automatically propagated to all clients. 
+For the score, I again used a network variable (```NetworkVariable<int> Score```) so that all clients are aware of score changes and can update the user interface (UI) accordingly. This network variable can only be modified by the server; if a client attempts to change it, nothing happens. Each player's score is managed exclusively by the server and then synchronized with the clients.
 
-The score UI is updated through the ```ScoreDisplay``` script, which periodically checks if the local player is known and, if so, updates the score text on the screen. This script ensures that the displayed score is always that of the player/client. Each client only sees their own updated score.
+The score UI is updated through the ```ScoreDisplay``` script, which periodically checks if the local player is known and, if so, updates the score text on the screen. This script ensures that the displayed score is always from the local player. Each client only sees their own updated score, unless on the leaderboard, where the top players' scores are displayed.
 
 ![Player Score](./Images/player_score.png)
 
@@ -59,13 +59,12 @@ The score UI is updated through the ```ScoreDisplay``` script, which periodicall
 
 For the respawn and despawn of players, I used a respawn management system that ensures players are recreated after dying. The ```RespawnManager``` script is responsible for managing these events. When a player is instantiated on the network (```OnNetworkSpawn()```), the script checks if it is the server and, if so, subscribes to the player spawn and despawn events. The ```OnPlayerSpawned``` event is used to associate each player's death event (```OnDie```) with a method that handles respawning. When a player dies, the ```PlayerDie()``` method is called, which destroys the player object and starts a coroutine (```RespawnPlayer```) to recreate the player after a defined wait time (```respawnDelay```).
 
-The ```RespawnPlayer``` coroutine waits for the defined respawn time and then obtains a new spawn position from the ```SpawnManager```. This manager selects an appropriate position for the player, ensuring that they do not spawn too close to other players. A new player object is then instantiated and configured for the original client. The ```SpawnManager``` provides the spawn positions and checks player proximity to prevent collisions during respawn.
+The ```RespawnPlayer``` coroutine waits for the defined respawn time and then obtains a new spawn position from the ```SpawnManager```. This manager selects an appropriate position for the player, ensuring that they do not spawn too close to other players. A new player object is then instantiated and configured for the original client.
 
 ### Names Above the Head
 
-For the player names, I used a combination of ```ServerRpc``` and ```ClientRpc``` to ensure all clients have access to player names and can update the UI accordingly. When a player enters the game, the ```SubmitPlayerNameServerRpc()``` method sends the player's name to the server. The client then requests all player names using ```RequestAllPlayerNamesServerRpc()```.
-
-When the network object is instantiated (```OnNetworkSpawn()```), if it is the local player, the name input from the player from ```JoinManager``` is sent to the server via ```SubmitPlayerNameServerRpc()```, and all player names are requested with ```RequestAllPlayerNamesServerRpc()```, the server updates the name information with that and uses ```UpdatePlayerNameClientRpc()``` to notify all clients about the player's name and to ensure the client knows the names of all other players. The ```OnPlayerNameChanged``` event is triggered to notify listeners the new player added, so that they can also know the player's name.
+For the player names, I used a combination of ```ServerRpc``` and ```ClientRpc``` to ensure all clients have access to player names and can update the UI accordingly.
+When the network object is instantiated (```OnNetworkSpawn()```), if it is the local player, the name input from the player from ```JoinManager``` is sent to the server via ```SubmitPlayerNameServerRpc()```, and all player names are requested with ```RequestAllPlayerNamesServerRpc()```, the server updates the name information with that and uses ```UpdatePlayerNameClientRpc()``` to notify all clients about the player's name and to ensure the client knows the names of all other players. The ```OnPlayerNameChanged``` event is triggered to notify listeners the new player added, so that they can also know the new player's name.
 
 ![Player Name](./Images/player_name.png)
 
@@ -102,9 +101,9 @@ When the network object is instantiated (```OnNetworkSpawn()```), the leaderboar
 
 The ```OnPlayerSpawned``` and ```OnPlayerDespawned``` events are used to add and remove players from the leaderboard. When a player spawns, the server initializes a ```LeaderboardEntityState``` for that player and adds it to the ```NetworkList```. Conversely, when a player despawns, their entry is removed from the list.
 
-The ```ClientRpc``` method ```UpdatePlayerNameClientRpc()``` ensures that players' names are propagated to all clients when the player joins the game. The players' scores and their ranking on the leaderboard are automatically updated through the ```NetworkList```, and these changes are reflected in real time in the UI. The leaderboard is sorted by score, from highest to lowest, ensuring that the players with the best scores appear at the top.
+The ```ClientRpc``` method ```UpdatePlayerNameClientRpc()``` ensures that players' names are propagated to all clients when the player joins the game. The players' scores and their ranking on the leaderboard are automatically updated through the ```NetworkList```, and these changes are reflected in real time in the UI. The leaderboard is sorted by score, from highest to lowest, ensuring that the players with the best scores appear at the top and hide the players with lower scores.
 
-The leaderboard UI is managed by the ```LeaderBoardEntityDisplay``` script, which visually updates the players' positions and scores. Additionally, the local player's name is displayed in a different color to highlight their position if they are on the leaderboard. This visual differentiation helps players easily identify their rank among other players.
+The leaderboard UI is managed by the ```LeaderBoardEntityDisplay``` script, which visually updates the players positions and scores. Additionally, the local player's name is displayed in a different color to highlight their position if they are on the leaderboard. This visual differentiation helps players easily identify their rank among other players.
 
 ![Leaderboard](./Images/leaderboard.png)
 
@@ -120,7 +119,7 @@ The bonus collection is protected to ensure that two players do not collect the 
 
 ## Healing Spaces
 
-Healing spaces are managed by the server, which controls their activation and deactivation. When a player enters the area of a healing space, the server checks if the player has less than the maximum health. If so, the player is healed by the amount defined in ```healAmount```, and the healing space is deactivated, starting a cooldown through the ```NetworkVariable``` ```remainingHealCooldown```.
+Healing spaces are managed by the server, which controls their activation and deactivation. When a player enters the area of a healing space, the server checks if the player has less than the maximum health. If so, the player is healed by the amount defined in ```healAmount``` or until reaching the maximum health, and the healing space is deactivated, starting a cooldown through the ```NetworkVariable``` ```remainingHealCooldown```.
 
 To avoid lag effects, the healing space is immediately deactivated on the client side, and the server validates the healing, updating the ```isActive``` variable to synchronize the deactivation with all clients. The cooldown timer is decremented by the server in the ```Update()``` method, and when it reaches zero, the healing space is reactivated, updating the ```isActive``` variable again.
 
@@ -130,11 +129,11 @@ Changes in the ```isActive``` and ```remainingHealCooldown``` variables trigger 
 
 ## Game Manager
 
-The ```GameManager``` controls the start, end, and restart of games, managing the game timer, player scores, and overall game state. In the ```OnNetworkSpawn()``` method, if the server is active, the game starts by calling the ```StartGame()``` method, which sets the game duration and begins the countdown with the ```GameTimerCoroutine()```.
+The ```GameManager``` controls the start, end, and restart of games. In the ```OnNetworkSpawn()``` method, if the server is active, the game starts by calling the ```StartGame()``` method, which sets the game duration and begins the countdown with the ```GameTimerCoroutine()```.
 
-The game timer is managed by the server, which decrements the value every second and updates all clients through the ```UpdateTimerClientRpc()``` method, keeping the time synchronized across all devices. When the timer reaches zero, the game ends, and the ```EndGame()``` method is called. This method disables player movement and shooting and removes active projectiles in the game through ```EndGameClientRpc()``` and ```EndGameServerRpc()```, ensuring all actions stop until a new game begins. The ```EndGameServerRpc()``` method removes projectiles that cause real damage, while the ```EndGameClientRpc()``` method removes visual projectiles (dummy projectiles).
+The game timer is managed by the server, which decrements the value every second and updates all clients through the ```UpdateTimerClientRpc()``` method, keeping the time synchronized across all clients. When the timer reaches zero, the game ends, and the ```EndGame()``` method is called. This method disables player movement and shooting and removes active projectiles in the game through ```EndGameClientRpc()``` and ```EndGameServerRpc()```, ensuring all actions stop until a new game begins. The ```EndGameServerRpc()``` method removes projectiles that cause real damage, while the ```EndGameClientRpc()``` method removes visual projectiles (dummy projectiles).
 
-After the game ends, the coroutine ```NewGameCountdownCoroutine()``` starts a countdown for the next game, updating clients with the current winner and the time remaining until the next game through ```UpdateEndGameTextClientRpc()```. When the countdown ends, the ```RestartGame()``` method is called, resetting the health and scores of players, resetting healing spaces, and reactivating player movement and shooting. The initial positions of players are also reset using a new random spawn, and these actions are synchronized with clients using ```StartNewGameClientRpc()```.
+After the game ends, the coroutine ```NewGameCountdownCoroutine()``` starts a countdown for the next game, updating clients with the current winner and the time remaining until the next game through ```UpdateEndGameTextClientRpc()```. When the countdown ends, the ```RestartGame()``` method is called, resetting the health and scores of players, resetting healing spaces, and reactivating player movement and shooting. The initial positions of players are also reset using a new spawn point, and these actions are synchronized with clients using ```StartNewGameClientRpc()```.
 
 ![game_manager](https://github.com/ManfelDev/CyberBattleOnline/assets/115217461/3749d638-81ef-4dd3-85b8-d3e0c547bfaf)
 
@@ -256,7 +255,7 @@ When the game manager starts a new game:
 
 ## How to play
 
-Download the [game build](https://drive.google.com/file/d/1w_uSUAUTIYPGaEXFyqNCm9iNG-GcY-0h/view?usp=drive_link) and follow the [instructions](https://docs.google.com/document/d/1QhR17MIm-lyO7O4UFQlbbxZOIg33hsRhL4Y3RcrNLBU/edit?usp=sharing).
+Download the [game build](https://drive.google.com/file/d/1HekYw-oBZEO__DyjiObWFATwt-qxUq8S/view?usp=sharing) and follow the [instructions](https://docs.google.com/document/d/1QhR17MIm-lyO7O4UFQlbbxZOIg33hsRhL4Y3RcrNLBU/edit?usp=sharing).
 
 ## References
 

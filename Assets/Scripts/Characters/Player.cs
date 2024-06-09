@@ -85,11 +85,6 @@ public class Player : Character
         modelTransform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
-    public void AddScore(int amount)
-    {
-        Score.Value += amount;
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.TryGetComponent<BonusScore>(out BonusScore bonusScore)) return;
