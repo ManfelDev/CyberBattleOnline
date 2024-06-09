@@ -92,7 +92,7 @@ This method has several benefits, such as allowing the player to see a projectil
 
 ![Projectiles](./Images/projectiles.png)
 
-*(Print screen of the same frame of a shot fired from the server side and the client side (a sprite renderer was added to the real projectile just to take the print screen))*
+*(Screenshot of the same frame of a shot fired from the server side and the client side (a sprite renderer was added to the real projectile just to take the screenshot))*
 
 ## Leaderboard
 
@@ -147,3 +147,109 @@ Advantages of using Unity Relay include easier setup for multiplayer games, redu
 Below is a technical example of how this connection work, illustrating the use of Unity Relay with a the maximum players connected, of 10 players.
 
 ![Network Diagram](./Images/network_diagram.png)
+
+## Bandwidth
+
+In this section, I will be showing the bandwidth usage for each of the following actions:
+
+### Client Request Connection
+
+When a client requests a connection to the server:
+
+![Bandwidth Client Request Connection](./Images/bandwidth_request_connection.png)
+
+### Client Connection
+
+When a client connects to the server:
+
+![Bandwidth Player Connection](./Images/bandwidth_connection.png)
+
+### Ownership and player spawn
+
+When a player spawns and takes ownership of their object:
+
+![Bandwidth Ownership and Player Spawn - NGO Messages](./Images/bandwidth_ownership.png)
+
+### Enter player on the leaderboard
+
+When a player enters the game and is added to the leaderboard:
+
+![Bandwidth Enter Player on the Leaderboard](./Images/bandwidth_leaderboard.png)
+
+### Load leaderboard entities
+
+When the leaderboard is loaded:
+
+![Bandwidth Load Leaderboard Entities](./Images/bandwidth_leaderboard_entities.png)
+
+### Player movement
+
+When a player moves (in this case, the player is moving up and to the right, while rotating, a mix of movement and rotation):
+
+![Bandwidth Player Movement](./Images/bandwidth_player_movement.png)
+
+### Player shooting
+
+When a player shoots, creating a the real projectile:
+
+![Bandwidth Player Shooting - Real Projectile](./Images/bandwidth_real_projectile.png)
+
+When a player shoots, creating a the dummy projectile for all the clients:
+
+![Bandwidth Player Shooting - Dummy Projectile](./Images/bandwidth_dummy_projectile.png)
+
+### Player health
+
+When a player's health is updated:
+
+![Bandwidth Player Health](./Images/bandwidth_player_health.png)
+
+### Player die
+
+When a player dies / despawns:
+
+![Bandwidth Player Die](./Images/bandwidth_player_die.png)
+
+### Using a healing space
+
+When a player uses a healing space:
+
+![Bandwidth Healing Space](./Images/bandwidth_healingspace_use.png)
+
+### Healing Space cooldown
+
+When a healing space is on cooldown:
+
+![Bandwidth Healing Space Cooldown](./Images/bandwidth_healingspace_cooldown.png)
+
+### Healing Space reactivation
+
+When a healing space is reactivated:
+
+![Bandwidth Healing Space Reactivation](./Images/bandwidth_healingspace_reactivation.png)
+
+### Bonus score
+
+When a player collects a bonus score:
+
+![Bandwidth Bonus Score](./Images/bandwidth_bonus_score.png)
+
+### Game timer
+
+When the game timer is updated:
+
+![Bandwidth Game Timer](./Images/bandwidth_game_timer.png)
+
+### End game
+
+When the game ends and the end game countdown starts, showing the winner and the time remaining until the next game starts:
+
+![Bandwidth End Game](./Images/bandwidth_end_game_countdown.png)
+
+When the end game countdown ends and a new game starts:
+
+### New game
+
+When the game manager starts a new game:
+
+![Bandwidth New Game](./Images/bandwidth_new_game.png)
