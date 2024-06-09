@@ -257,6 +257,7 @@ When the game manager starts a new game:
 ## References
 
 - [Unity - Network for GameObjects API](https://docs-multiplayer.unity3d.com/netcode/1.6.0/about/)
+- [Unity - Latency and Packet Loss](https://docs-multiplayer.unity3d.com/netcode/1.6.0/learn/lagandpacketloss/)
 - [Unity - Relay](https://docs.unity.com/ugs/en-us/manual/relay/manual/get-started)
 - [Unity - Network Profiler](https://docs-multiplayer.unity3d.com/tools/current/profiler/index.html)
 - [Sistemas de Redes para Jogos - Aula 15/05/2024](https://www.youtube.com/watch?v=y7ETO57_kQY)
