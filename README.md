@@ -263,3 +263,4 @@ When the game manager starts a new game:
 - [Sistemas de Redes para Jogos - Aula 22/05/2024](https://www.youtube.com/watch?v=NWwIrN_hJwU)
 - [Sistemas de Redes para Jogos - Aula 29/05/2024](https://www.youtube.com/watch?v=FNntUfrpwWI)
 - [COMPLETE Unity Multiplayer Tutorial (Netcode for Game Objects)](https://www.youtube.com/watch?v=3yuBOB3VrCk)
+- [Top-down Tanks Redux · Kenney - For the background and walls](https://kenney.nl/assets/top-down-tanks-redux)
