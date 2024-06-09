@@ -138,7 +138,7 @@ After the game ends, the coroutine ```NewGameCountdownCoroutine()``` starts a co
 
 ![game_manager](https://github.com/ManfelDev/CyberBattleOnline/assets/115217461/3749d638-81ef-4dd3-85b8-d3e0c547bfaf)
 
-## Network Diagram
+## Network architecture diagram
 
 Unity Relay is a service that facilitates multiplayer connectivity by routing traffic between players' devices without requiring a dedicated server. Relay helps to establish connections when direct peer-to-peer communication is not possible due to network configurations such as NATs or firewalls. By acting as an intermediary, Relay ensures that all players can connect to each other reliably. The Unity Relay system enhances the security of the peer-to-peer model by adding a server that acts as an intermediary for the connection between the Host and Clients.
 
@@ -190,11 +190,11 @@ When a player moves (in this case, the player is moving up and to the right, whi
 
 ### Player shooting
 
-When a player shoots, creating a the real projectile:
+When a player shoots, creating a real projectile:
 
 ![Bandwidth Player Shooting - Real Projectile](./Images/bandwidth_real_projectile.png)
 
-When a player shoots, creating a the dummy projectile for all the clients:
+When a player shoots, creating a dummy projectile for all the clients:
 
 ![Bandwidth Player Shooting - Dummy Projectile](./Images/bandwidth_dummy_projectile.png)
 
@@ -253,3 +253,13 @@ When the end game countdown ends and a new game starts:
 When the game manager starts a new game:
 
 ![Bandwidth New Game](./Images/bandwidth_new_game.png)
+
+## References
+
+- [Unity - Network for GameObjects API](https://docs-multiplayer.unity3d.com/netcode/1.6.0/about/)
+- [Unity - Relay](https://docs.unity.com/ugs/en-us/manual/relay/manual/get-started)
+- [Unity - Network Profiler](https://docs-multiplayer.unity3d.com/tools/current/profiler/index.html)
+- [Sistemas de Redes para Jogos - Aula 15/05/2024](https://www.youtube.com/watch?v=y7ETO57_kQY)
+- [Sistemas de Redes para Jogos - Aula 22/05/2024](https://www.youtube.com/watch?v=NWwIrN_hJwU)
+- [Sistemas de Redes para Jogos - Aula 29/05/2024](https://www.youtube.com/watch?v=FNntUfrpwWI)
+- [COMPLETE Unity Multiplayer Tutorial (Netcode for Game Objects)](https://www.youtube.com/watch?v=3yuBOB3VrCk)
