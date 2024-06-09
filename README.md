@@ -63,11 +63,9 @@ The ```RespawnPlayer``` coroutine waits for the defined respawn time and then ob
 
 ### Names Above the Head
 
-For the player names, I used a combination of  ```ServerRpc``` and ```ClientRpc``` to ensure that all clients have access to the player's name and can update the user interface (UI) accordingly. When a player enters the game, the ```SubmitPlayerNameServerRpc()``` method is called, sending the player's name to the server. The server, in turn, propagates this information to all clients using the ```UpdatePlayerNameClientRpc()``` method.
+For the player names, I used a combination of ```ServerRpc``` and ```ClientRpc``` to ensure all clients have access to player names and can update the UI accordingly. When a player enters the game, the ```SubmitPlayerNameServerRpc()``` method sends the player's name to the server. The client then requests all player names using ```RequestAllPlayerNamesServerRpc()```.
 
-When the network object is instantiated (```OnNetworkSpawn()```), the player's name is configured and synchronized. If it is the local player, the name is obtained from the ```JoinManager```, which is where the client enters their nickname at the beginning of the application, and sent to the server via ```SubmitPlayerNameServerRpc()```. The server updates the name information and uses ```UpdatePlayerNameClientRpc()``` to notify all clients about the player's name. The ```OnPlayerNameChanged``` event is executed to notify any listeners about the name setting.
-
-Additionally, when requesting all player names (```RequestAllPlayerNamesServerRpc()```), the server sends the names of all connected players to the client that made the request, ensuring that the player list is always up to date. This system ensures that player names are synchronized. In the game, the player's name can only be set at the beginning and cannot be changed later.
+When the network object is instantiated (```OnNetworkSpawn()```), if it is the local player, the name input from the player from ```JoinManager``` is sent to the server via ```SubmitPlayerNameServerRpc()```, and all player names are requested with ```RequestAllPlayerNamesServerRpc()```, the server updates the name information with that and uses ```UpdatePlayerNameClientRpc()``` to notify all clients about the player's name and to ensure the client knows the names of all other players. The ```OnPlayerNameChanged``` event is triggered to notify listeners the new player added, so that they can also know the player's name.
 
 ![Player Name](./Images/player_name.png)
 

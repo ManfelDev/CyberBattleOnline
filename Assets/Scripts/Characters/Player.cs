@@ -140,7 +140,6 @@ public class Player : Character
     private void SubmitPlayerNameServerRpc(string name)
     {
         playerName = name;
-        UpdatePlayerNameClientRpc(name);
         OnPlayerNameChanged?.Invoke(OwnerClientId, playerName);
     }
 
@@ -151,14 +150,6 @@ public class Player : Character
         {
             UpdatePlayerNameClientRpc(player.playerName.Value, player.OwnerClientId);
         }
-    }
-
-    [ClientRpc]
-    private void UpdatePlayerNameClientRpc(string name)
-    {
-        playerName = name;
-        playerNameText.text = playerName.Value;
-        OnPlayerNameChanged?.Invoke(OwnerClientId, playerName);
     }
 
     [ClientRpc]
