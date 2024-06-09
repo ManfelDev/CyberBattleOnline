@@ -156,7 +156,7 @@ In this section, I will be showing the bandwidth usage for each of the following
 
 When a client requests a connection to the server:
 
-![Bandwidth Client Request Connection](./Images/bandwidth_request_connection.png)
+![Bandwidth Client Request Connection](./Images/bandwidth_connection_request.png)
 
 ### Client Connection
 
